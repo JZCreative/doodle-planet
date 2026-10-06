@@ -1,0 +1,144 @@
+{
+  "name": "表情叠叠塔",
+  "faces": 120000,
+  "regions": [
+    {
+      "id": 0,
+      "name": "底座",
+      "faces": 23431
+    },
+    {
+      "id": 1,
+      "name": "底层方块",
+      "faces": 20550
+    },
+    {
+      "id": 2,
+      "name": "波浪脸与流淌边",
+      "faces": 23025
+    },
+    {
+      "id": 3,
+      "name": "中层哭脸",
+      "faces": 12968
+    },
+    {
+      "id": 4,
+      "name": "顶部大头",
+      "faces": 27739
+    },
+    {
+      "id": 5,
+      "name": "头顶装饰",
+      "faces": 7568
+    },
+    {
+      "id": 6,
+      "name": "大头左眼白",
+      "faces": 629
+    },
+    {
+      "id": 7,
+      "name": "大头左瞳孔",
+      "faces": 36
+    },
+    {
+      "id": 8,
+      "name": "大头右眼白",
+      "faces": 846
+    },
+    {
+      "id": 9,
+      "name": "大头右瞳孔",
+      "faces": 37
+    },
+    {
+      "id": 10,
+      "name": "大头嘴巴",
+      "faces": 410
+    },
+    {
+      "id": 11,
+      "name": "哭脸左眼白",
+      "faces": 253
+    },
+    {
+      "id": 12,
+      "name": "哭脸左瞳孔",
+      "faces": 26
+    },
+    {
+      "id": 13,
+      "name": "哭脸右眼白",
+      "faces": 385
+    },
+    {
+      "id": 14,
+      "name": "哭脸右瞳孔",
+      "faces": 43
+    },
+    {
+      "id": 15,
+      "name": "哭脸嘴巴",
+      "faces": 77
+    },
+    {
+      "id": 16,
+      "name": "波浪脸左眼白",
+      "faces": 206
+    },
+    {
+      "id": 17,
+      "name": "波浪脸左瞳孔",
+      "faces": 51
+    },
+    {
+      "id": 18,
+      "name": "波浪脸右眼白",
+      "faces": 319
+    },
+    {
+      "id": 19,
+      "name": "波浪脸右瞳孔",
+      "faces": 85
+    },
+    {
+      "id": 20,
+      "name": "波浪脸嘴巴",
+      "faces": 336
+    },
+    {
+      "id": 21,
+      "name": "方块脸左眼白",
+      "faces": 213
+    },
+    {
+      "id": 22,
+      "name": "方块脸左瞳孔",
+      "faces": 32
+    },
+    {
+      "id": 23,
+      "name": "方块脸右眼白",
+      "faces": 394
+    },
+    {
+      "id": 24,
+      "name": "方块脸右瞳孔",
+      "faces": 76
+    },
+    {
+      "id": 25,
+      "name": "方块脸嘴巴",
+      "faces": 109
+    },
+    {
+      "id": 26,
+      "name": "眼泪",
+      "faces": 156
+    }
+  ],
+  "source": "abstract sculpture 3d model.stl",
+  "geometry": "Simplified and smoothed derivative; original source is preserved separately",
+  "sha256": "7f09186e16421ab48c36a282684769f10690b1cc85336d36c0148a51bdc23428"
+}

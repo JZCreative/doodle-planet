@@ -1,0 +1,53 @@
+{
+  "name": "哭太阳",
+  "faces": 123825,
+  "regions": [
+    {
+      "id": 0,
+      "name": "太阳光芒与背面",
+      "faces": 91283
+    },
+    {
+      "id": 1,
+      "name": "脸部",
+      "faces": 23582
+    },
+    {
+      "id": 2,
+      "name": "眼白 1",
+      "faces": 2902
+    },
+    {
+      "id": 3,
+      "name": "瞳孔 1",
+      "faces": 879
+    },
+    {
+      "id": 4,
+      "name": "眼白 2",
+      "faces": 2739
+    },
+    {
+      "id": 5,
+      "name": "瞳孔 2",
+      "faces": 717
+    },
+    {
+      "id": 6,
+      "name": "左上泪滴",
+      "faces": 263
+    },
+    {
+      "id": 7,
+      "name": "左下泪滴",
+      "faces": 299
+    },
+    {
+      "id": 8,
+      "name": "右侧泪滴",
+      "faces": 1161
+    }
+  ],
+  "source": "sun face sculpture 3d model.stl",
+  "geometry": "Original ray silhouette, locally faired face, front-only ink and tears; source unchanged."
+}

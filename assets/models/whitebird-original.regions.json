@@ -1,0 +1,88 @@
+{
+  "name": "长腿白鸟",
+  "faces": 202974,
+  "regions": [
+    {
+      "id": 0,
+      "name": "身体与展开的羽翼",
+      "faces": 82476
+    },
+    {
+      "id": 1,
+      "name": "头颈",
+      "faces": 36432
+    },
+    {
+      "id": 2,
+      "name": "鸟冠",
+      "faces": 14145
+    },
+    {
+      "id": 3,
+      "name": "鸟嘴",
+      "faces": 8373
+    },
+    {
+      "id": 4,
+      "name": "左腿",
+      "faces": 9757
+    },
+    {
+      "id": 5,
+      "name": "右腿",
+      "faces": 11033
+    },
+    {
+      "id": 6,
+      "name": "左脚",
+      "faces": 6669
+    },
+    {
+      "id": 7,
+      "name": "右脚",
+      "faces": 7182
+    },
+    {
+      "id": 8,
+      "name": "左眼白",
+      "faces": 3111
+    },
+    {
+      "id": 9,
+      "name": "右眼白",
+      "faces": 2295
+    },
+    {
+      "id": 10,
+      "name": "左瞳孔",
+      "faces": 504
+    },
+    {
+      "id": 11,
+      "name": "右瞳孔",
+      "faces": 498
+    },
+    {
+      "id": 12,
+      "name": "胸羽 1",
+      "faces": 4304
+    },
+    {
+      "id": 13,
+      "name": "胸羽 2",
+      "faces": 4476
+    },
+    {
+      "id": 14,
+      "name": "胸羽 3",
+      "faces": 4086
+    },
+    {
+      "id": 15,
+      "name": "胸羽 4",
+      "faces": 7633
+    }
+  ],
+  "source": "white bird sculpture 3d model.stl",
+  "geometry": "Source STL display derivative; localized smoothing of four front feather relief patches only."
+}

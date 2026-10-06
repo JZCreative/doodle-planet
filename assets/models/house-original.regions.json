@@ -1,0 +1,78 @@
+{
+  "name": "漫游小屋",
+  "faces": 185452,
+  "regions": [
+    {
+      "id": 0,
+      "name": "房屋侧墙与背面",
+      "faces": 21205
+    },
+    {
+      "id": 1,
+      "name": "正面墙壁",
+      "faces": 22614
+    },
+    {
+      "id": 2,
+      "name": "屋顶",
+      "faces": 35672
+    },
+    {
+      "id": 3,
+      "name": "烟囱",
+      "faces": 5270
+    },
+    {
+      "id": 4,
+      "name": "烟团",
+      "faces": 25235
+    },
+    {
+      "id": 5,
+      "name": "左腿",
+      "faces": 18316
+    },
+    {
+      "id": 6,
+      "name": "右腿",
+      "faces": 24978
+    },
+    {
+      "id": 7,
+      "name": "左脚",
+      "faces": 10786
+    },
+    {
+      "id": 8,
+      "name": "右脚",
+      "faces": 14634
+    },
+    {
+      "id": 9,
+      "name": "眼白 1",
+      "faces": 1739
+    },
+    {
+      "id": 10,
+      "name": "瞳孔 1",
+      "faces": 146
+    },
+    {
+      "id": 11,
+      "name": "眼白 2",
+      "faces": 1985
+    },
+    {
+      "id": 12,
+      "name": "瞳孔 2",
+      "faces": 220
+    },
+    {
+      "id": 13,
+      "name": "微笑嘴巴",
+      "faces": 2652
+    }
+  ],
+  "source": "house with legs 3d model.stl",
+  "geometry": "Original STL display derivative, facial relief flattened locally; source untouched."
+}

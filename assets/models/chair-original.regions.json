@@ -1,0 +1,123 @@
+{
+  "name": "散步扶手椅",
+  "faces": 323329,
+  "regions": [
+    {
+      "id": 0,
+      "name": "椅身",
+      "faces": 42548
+    },
+    {
+      "id": 1,
+      "name": "椅背软垫",
+      "faces": 51229
+    },
+    {
+      "id": 2,
+      "name": "座面",
+      "faces": 26112
+    },
+    {
+      "id": 3,
+      "name": "左扶手",
+      "faces": 20533
+    },
+    {
+      "id": 4,
+      "name": "右扶手",
+      "faces": 19609
+    },
+    {
+      "id": 5,
+      "name": "左扶手端面",
+      "faces": 9795
+    },
+    {
+      "id": 6,
+      "name": "右扶手端面",
+      "faces": 10172
+    },
+    {
+      "id": 7,
+      "name": "正面表情面板",
+      "faces": 27911
+    },
+    {
+      "id": 8,
+      "name": "左腿",
+      "faces": 31783
+    },
+    {
+      "id": 9,
+      "name": "右腿",
+      "faces": 31817
+    },
+    {
+      "id": 10,
+      "name": "左脚",
+      "faces": 20370
+    },
+    {
+      "id": 11,
+      "name": "右脚",
+      "faces": 11966
+    },
+    {
+      "id": 12,
+      "name": "椅背纽扣 1",
+      "faces": 1135
+    },
+    {
+      "id": 13,
+      "name": "椅背纽扣 2",
+      "faces": 1200
+    },
+    {
+      "id": 14,
+      "name": "椅背纽扣 3",
+      "faces": 1211
+    },
+    {
+      "id": 15,
+      "name": "椅背纽扣 4",
+      "faces": 1406
+    },
+    {
+      "id": 16,
+      "name": "椅背纽扣 5",
+      "faces": 1536
+    },
+    {
+      "id": 17,
+      "name": "椅背纽扣 6",
+      "faces": 1575
+    },
+    {
+      "id": 18,
+      "name": "眼白 1",
+      "faces": 3696
+    },
+    {
+      "id": 19,
+      "name": "瞳孔 1",
+      "faces": 649
+    },
+    {
+      "id": 20,
+      "name": "眼白 2",
+      "faces": 3630
+    },
+    {
+      "id": 21,
+      "name": "瞳孔 2",
+      "faces": 824
+    },
+    {
+      "id": 22,
+      "name": "微笑嘴巴",
+      "faces": 2622
+    }
+  ],
+  "source": "chair 3d model.stl",
+  "geometry": "Original shape with localized smoothing of upholstery buttons and facial relief only."
+}

@@ -1,0 +1,58 @@
+{
+  "name": "手指鱼鸟",
+  "faces": 190023,
+  "regions": [
+    {
+      "id": 0,
+      "name": "鱼鸟身体",
+      "faces": 96994
+    },
+    {
+      "id": 1,
+      "name": "头部",
+      "faces": 36001
+    },
+    {
+      "id": 2,
+      "name": "鸟喙",
+      "faces": 46917
+    },
+    {
+      "id": 3,
+      "name": "眼白",
+      "faces": 4284
+    },
+    {
+      "id": 4,
+      "name": "瞳孔",
+      "faces": 2136
+    },
+    {
+      "id": 5,
+      "name": "指甲 1",
+      "faces": 760
+    },
+    {
+      "id": 6,
+      "name": "指甲 2",
+      "faces": 755
+    },
+    {
+      "id": 7,
+      "name": "指甲 3",
+      "faces": 715
+    },
+    {
+      "id": 8,
+      "name": "指甲 4",
+      "faces": 866
+    },
+    {
+      "id": 9,
+      "name": "指甲 5",
+      "faces": 595
+    }
+  ],
+  "source": "fish hand sculpture 3d model.stl, original preserved",
+  "geometry": "Bilateral head, beak, eye and artist-traced irregular zigzag scales on both sides. Nails remain on the original side; STL-based rounded body and projecting beak; local relief fairing."
+}

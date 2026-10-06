@@ -1,0 +1,73 @@
+{
+  "name": "怪狼",
+  "faces": 160591,
+  "regions": [
+    {
+      "id": 0,
+      "name": "身体与手臂",
+      "faces": 64696
+    },
+    {
+      "id": 1,
+      "name": "头部与长嘴",
+      "faces": 53826
+    },
+    {
+      "id": 2,
+      "name": "鼻头",
+      "faces": 6882
+    },
+    {
+      "id": 3,
+      "name": "翘起的脚",
+      "faces": 8226
+    },
+    {
+      "id": 4,
+      "name": "指向的手",
+      "faces": 11866
+    },
+    {
+      "id": 5,
+      "name": "支撑的手",
+      "faces": 5150
+    },
+    {
+      "id": 6,
+      "name": "眼白 1",
+      "faces": 1175
+    },
+    {
+      "id": 7,
+      "name": "瞳孔 1",
+      "faces": 430
+    },
+    {
+      "id": 8,
+      "name": "眼白 2",
+      "faces": 1722
+    },
+    {
+      "id": 9,
+      "name": "瞳孔 2",
+      "faces": 609
+    },
+    {
+      "id": 10,
+      "name": "左耳内",
+      "faces": 594
+    },
+    {
+      "id": 11,
+      "name": "右耳内",
+      "faces": 363
+    },
+    {
+      "id": 12,
+      "name": "牙齿",
+      "faces": 5052
+    }
+  ],
+  "source": "stylized cat 3d model.stl",
+  "geometry": "Original STL pose with local eye smoothing; original file untouched."
+}

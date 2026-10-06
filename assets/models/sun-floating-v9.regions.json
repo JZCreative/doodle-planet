@@ -1,0 +1,52 @@
+{
+  "name": "sun",
+  "source": "outputs/sun-floating-v5/slow-sun-floating-v5.stl",
+  "faces": 73067,
+  "regions": [
+    {
+      "id": 0,
+      "name": "连续外表面（星头、身体及四肢）",
+      "faces": 68345
+    },
+    {
+      "id": 1,
+      "name": "左眼白",
+      "faces": 798
+    },
+    {
+      "id": 2,
+      "name": "右眼白",
+      "faces": 904
+    },
+    {
+      "id": 3,
+      "name": "左瞳孔",
+      "faces": 207
+    },
+    {
+      "id": 4,
+      "name": "右瞳孔",
+      "faces": 259
+    },
+    {
+      "id": 5,
+      "name": "完整嘴巴",
+      "faces": 2034
+    },
+    {
+      "id": 6,
+      "name": "左胸部",
+      "faces": 142
+    },
+    {
+      "id": 7,
+      "name": "右胸部",
+      "faces": 267
+    },
+    {
+      "id": 8,
+      "name": "肚脐",
+      "faces": 111
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "name": "bunny",
+  "source": "curve-bunny/long-ears-master.3dm",
+  "method": "curve artwork clipped into reconstructed surface",
+  "faces": 43135,
+  "regions": [
+    {
+      "id": 0,
+      "name": "身体",
+      "faces": 35333
+    },
+    {
+      "id": 1,
+      "name": "左耳内",
+      "faces": 572
+    },
+    {
+      "id": 2,
+      "name": "左眼白",
+      "faces": 706
+    },
+    {
+      "id": 3,
+      "name": "左虹膜",
+      "faces": 530
+    },
+    {
+      "id": 4,
+      "name": "左瞳孔",
+      "faces": 172
+    },
+    {
+      "id": 5,
+      "name": "左睫毛",
+      "faces": 298
+    },
+    {
+      "id": 6,
+      "name": "右耳内",
+      "faces": 568
+    },
+    {
+      "id": 7,
+      "name": "右眼白",
+      "faces": 645
+    },
+    {
+      "id": 8,
+      "name": "右虹膜",
+      "faces": 471
+    },
+    {
+      "id": 9,
+      "name": "右瞳孔",
+      "faces": 153
+    },
+    {
+      "id": 10,
+      "name": "右睫毛",
+      "faces": 249
+    },
+    {
+      "id": 11,
+      "name": "左门牙",
+      "faces": 129
+    },
+    {
+      "id": 12,
+      "name": "右门牙",
+      "faces": 231
+    },
+    {
+      "id": 13,
+      "name": "鼻子",
+      "faces": 1922
+    },
+    {
+      "id": 14,
+      "name": "左脚趾甲1",
+      "faces": 243
+    },
+    {
+      "id": 15,
+      "name": "左脚趾甲2",
+      "faces": 138
+    },
+    {
+      "id": 16,
+      "name": "左脚趾甲3",
+      "faces": 180
+    },
+    {
+      "id": 17,
+      "name": "右脚趾甲1",
+      "faces": 226
+    },
+    {
+      "id": 18,
+      "name": "右脚趾甲2",
+      "faces": 152
+    },
+    {
+      "id": 19,
+      "name": "右脚趾甲3",
+      "faces": 217
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111326" />
+  <meta name="description" content="Doodle Planet — 可旋转的 3D 手绘填色实验。" />
+  <title>Doodle Planet · 3D 填色实验室</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23111326'/%3E%3Cpath d='M32 7l3 18 15-8-12 13 17 5-18 1 9 15-14-11-7 17 2-19-18 6 15-12L9 23l18 4z' fill='%23ffd75e' stroke='%23fff7db' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css?v=universe-1" />
+  <link rel="stylesheet" href="universe.css?v=quiet-57" />
+  <link rel="stylesheet" href="artist.css?v=1" />
+  <link rel="stylesheet" href="progress.css?v=4" />
+  <link rel="stylesheet" href="journey.css?v=4" />
+  <link rel="stylesheet" href="group-portrait.css?v=2" />
+  <link rel="stylesheet" href="artist-thumbnails.css?v=1" />
+  <link rel="stylesheet" href="i18n.css?v=1" />
+  <script type="importmap">
+  {"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}
+  </script>
+</head>
+<body class="home-mode">
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Doodle Planet 首页">
+        <span class="brand-spark">✣</span>
+        <span>DOODLE<br><b>PLANET</b></span>
+      </a>
+      <div class="title-note">
+        <span class="tape"></span>
+        <span>给怪可爱的宇宙上色</span>
+      </div>
+      <div class="top-actions">
+        <button class="sketch-button" id="languageBtn" data-no-translate>中文 ✓ / EN</button>
+        <button class="sketch-button" id="journeyBtn" aria-haspopup="dialog" aria-controls="journeyDialog">旅行手册</button>
+        <button class="sketch-button" id="recordsBtn" aria-haspopup="dialog">设计记录</button>
+        <button class="sketch-button" id="artistBtn" aria-haspopup="dialog" aria-controls="artistDialog">关于艺术家 ↗</button>
+        <button class="sketch-button" id="homeBtn" hidden>← 回到宇宙</button>
+        <button class="sketch-button icon-button" id="resetBtn" title="恢复初始视角" aria-label="恢复初始视角">↻</button>
+        <button class="sketch-button sound-button" id="spinBtn" aria-pressed="false"><span>✦</span> 漂浮</button>
+      </div>
+    </header>
+
+    <section id="universe" aria-label="手绘宇宙首页">
+      <p id="progressSummary" role="status">已认识 5 / 19</p><p class="unlock-rule">完成一件作品，任选一位新朋友 · 3 个分区或 3 笔即可完成</p>
+      <div class="universe-heading"><span class="eyebrow">A LITTLE UNIVERSE, ALL YOURS.</span><h1>奇思妙想，慢慢漂<span>✳</span></h1><p>拖动环绕 · 悬停让朋友停一停 · 点击开始填色</p></div>
+      <div class="universe-space" id="universeSpace">
+        <div id="homeViewport" aria-hidden="true"></div>
+        <div class="resident-grid" id="residentGrid"></div>
+        <div class="sky-surprises" hidden style="display:none"><button id="sleepyMoon" aria-label="和月亮打招呼" aria-pressed="false">☾</button><button id="rainCloud" aria-label="轻碰云朵，下一场彩色雨">☁</button><button id="hiddenTrail" aria-label="沿着虚线寻找新朋友">↝</button></div>
+        <div id="skyWhisper" class="sky-whisper" role="status"></div><div id="colorRain" class="color-rain" aria-hidden="true"></div>
+      </div>
+      <div class="universe-footer"><span>轻轻相碰，换个方向再出发</span><span id="universeStatus" role="status">正在叫醒宇宙居民…</span><button id="portraitBtn" disabled>宇宙合照</button><button id="resetUniverseBtn" aria-haspopup="dialog">重置宇宙</button><button id="convergenceBtn">回到中央 ↗</button><button id="homeMotion" aria-pressed="true">暂停漂浮 Ⅱ</button></div>
+    </section>
+    <section class="workspace" hidden>
+      <aside class="model-rail paper-panel" aria-label="选择角色">
+        <p class="rail-label">今天涂谁？</p>
+        <button class="model-card active" data-model="bunny">
+          <span class="model-doodle bunny-doodle">ᘏ⑅ᘏ</span>
+          <span><b>长耳朵</b><small>月球居民 01</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="sun">
+          <span class="model-doodle sun-doodle">☀</span>
+          <span><b>慢太阳</b><small>发光居民 02</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="cat">
+          <span class="model-doodle cat-doodle">ↀᴥↀ</span>
+          <span><b>梦游猫</b><small>夜班居民 03</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="bird">
+          <span class="model-doodle">♧</span>
+          <span><b>叠叠鸟</b><small>高个居民 04</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="broccoli">
+          <span class="model-doodle">♧</span>
+          <span><b>花椰树</b><small>森林居民 05</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="skull">
+          <span class="model-doodle">☻</span>
+          <span><b>笑脸骷髅</b><small>微笑居民 06</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="glove">
+          <span class="model-doodle">♧</span>
+          <span><b>微笑拳套</b><small>拳击居民 07</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="apple">
+          <span class="model-doodle">♧</span>
+          <span><b>苹果三重奏</b><small>果园居民 08</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="whitecat">
+          <span class="model-doodle">ↀᴥↀ</span>
+          <span><b>长身白猫</b><small>散步居民 09</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="whitebird">
+          <span class="model-doodle">♧</span>
+          <span><b>长腿白鸟</b><small>漫游居民 10</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="chair">
+          <span class="model-doodle">♧</span>
+          <span><b>散步扶手椅</b><small>休闲居民 11</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="house">
+          <span class="model-doodle">⌂</span>
+          <span><b>漫游小屋</b><small>旅行居民 12</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="wolf">
+          <span class="model-doodle">↗</span>
+          <span><b>怪狼</b><small>奇想居民 13</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="cryingsun">
+          <span class="model-doodle">☀</span>
+          <span><b>哭太阳</b><small>雨天居民 14</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="cake">
+          <span class="model-doodle">♜</span>
+          <span><b>怪手蛋糕塔</b><small>庆典居民 15</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="fingerbird">
+          <span class="model-doodle">☞</span>
+          <span><b>手指鱼鸟</b><small>飞游居民 16</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="coilsnake">
+          <span class="model-doodle">〰</span>
+          <span><b>盘盘牙蛇</b><small>盘绕居民 17</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="facestack">
+          <span class="model-doodle">♜</span>
+          <span><b>表情叠叠塔</b><small>心情居民 18</small></span>
+          <i>✓</i>
+        </button>
+        <button class="model-card" data-model="alien">
+          <span class="model-doodle">◎</span>
+          <span><b>圈圈外星人</b><small>远方居民 19</small></span>
+          <i>✓</i>
+        </button>
+        <div class="rail-note">拖动画面<br>从每一面看看它</div>
+      </aside>
+
+      <section class="stage-wrap" aria-label="3D 填色画布">
+        <div id="portraitToolbar" hidden><strong>宇宙合照</strong><span id="portraitHint" role="status"></span><div><button id="portraitShuffle">换一组 ↻</button><button id="portraitConfirm">就这组，开始涂鸦 ↗</button><button id="portraitExport" hidden>保存合照图片 ↓</button></div></div>
+        <div class="orbit-ring ring-one"></div>
+        <div class="orbit-ring ring-two"></div>
+        <div id="viewport"></div>
+        <div class="loading-card" id="loader" role="status">
+          <span class="loader-scribble"></span>
+          <b>正在叫醒角色…</b>
+          <small>整理它的线条和轮廓</small>
+        </div>
+        <div class="stage-caption">
+          <span id="modelName">长耳朵</span>
+          <small>拖拽旋转 · 滚轮缩放 · 点击上色</small>
+        </div>
+        <div class="float-note note-one">不要涂得<br>太乖！</div>
+        <div class="float-note note-two">转一转 →</div>
+        <div class="paint-burst" id="paintBurst" aria-hidden="true"></div>
+      </section>
+
+      <aside class="tool-panel paper-panel" aria-label="填色工具">
+        <div class="panel-heading">
+          <span class="scribble-star">✦</span>
+          <div><small>COLOR KIT</small><h1>乱涂工具箱</h1></div>
+        </div>
+
+        <fieldset class="tool-picker">
+          <legend>怎么玩？</legend>
+          <label class="tool-option active">
+            <input type="radio" name="tool" value="fill" checked />
+            <span class="tool-icon fill-icon">▧</span>
+            <span><b>区域填色</b><small>为相连的表面上色</small></span>
+          </label>
+          <label class="tool-option">
+            <input type="radio" name="tool" value="splash" />
+            <span class="tool-icon splash-icon">✺</span>
+            <span><b>泼一泼</b><small>不规则墨斑与细小飞点</small></span>
+          </label>
+          <label class="tool-option">
+            <input type="radio" name="tool" value="brush" />
+            <span class="tool-icon">✎</span>
+            <span><b>刷子</b><small>按住拖动，连续涂刷</small></span>
+          </label>
+        </fieldset>
+        <div class="brush-control">
+          <label for="brushSize">笔刷大小</label>
+          <input id="brushSize" type="range" min="0.08" max="0.4" step="0.01" value="0.20" />
+        </div>
+
+        <fieldset class="palette">
+          <legend>抓一支颜色</legend>
+          <div class="crayons" id="palette">
+            <button class="crayon active" style="--c:#ff6157" data-color="#ff6157" aria-label="番茄红"><span></span><small>红</small></button>
+            <button class="crayon" style="--c:#ffd75e" data-color="#ffd75e" aria-label="太阳黄"><span></span><small>黄</small></button>
+            <button class="crayon" style="--c:#55d6a4" data-color="#55d6a4" aria-label="薄荷绿"><span></span><small>绿</small></button>
+            <button class="crayon" style="--c:#5d8cff" data-color="#5d8cff" aria-label="月亮蓝"><span></span><small>蓝</small></button>
+            <button class="crayon" style="--c:#ad79ff" data-color="#ad79ff" aria-label="怪梦紫"><span></span><small>紫</small></button>
+            <button class="crayon" style="--c:#fff" data-color="#ffffff" aria-label="留白"><span></span><small>留白</small></button>
+          </div>
+        </fieldset>
+
+        <fieldset class="palette">
+          <legend>柔和色</legend>
+          <div class="crayons" id="softPalette">
+            <button class="crayon" style="--c:#f3a6bd" data-color="#f3a6bd" aria-label="桃花粉"><span></span><small>桃粉</small></button>
+            <button class="crayon" style="--c:#efb183" data-color="#efb183" aria-label="杏子橙"><span></span><small>杏橙</small></button>
+            <button class="crayon" style="--c:#eee1b0" data-color="#eee1b0" aria-label="奶油黄"><span></span><small>奶黄</small></button>
+            <button class="crayon" style="--c:#83bec8" data-color="#83bec8" aria-label="湖水青"><span></span><small>湖青</small></button>
+            <button class="crayon" style="--c:#b3a8cd" data-color="#b3a8cd" aria-label="雾气紫"><span></span><small>雾紫</small></button>
+            <button class="crayon" style="--c:#997b69" data-color="#997b69" aria-label="可可棕"><span></span><small>可可</small></button>
+          </div>
+        </fieldset>
+
+        <div class="line-control">
+          <label for="lineWidth"><span>线条脾气</span><small id="lineLabel">刚刚好</small></label>
+          <input id="lineWidth" type="range" min="1" max="8" value="4" />
+          <div class="line-preview"><i></i></div>
+        </div>
+
+        <button class="big-action" id="undoBtn" disabled><span>↶</span> 撤销上一步 <em>UNDO</em></button>
+        <button class="big-action" id="randomBtn"><span>↺</span> 恢复纯白 <em>START AGAIN</em></button>
+        <section class="wish-card" aria-label="角色的口头禅"><p id="wishText"></p></section>
+        <p class="tip" id="inkStatus" role="status">刷子：在角色上拖动涂色，拖动空白处旋转。</p>
+        <section class="design-progress" aria-label="创作进度"><p id="designGoal">涂色 3 个分区，或完成 3 笔涂鸦</p><button id="saveDesign">保存设计版本</button><button id="finishDesign" disabled>完成作品 · 解锁下一位</button></section>
+        <button id="postcardBtn">生成头像 ↗</button>
+      </aside>
+    </section>
+  </main>
+  <p id="saveStatus" role="status">存档保存在当前浏览器，不跨设备同步</p>
+  <dialog class="artist-dialog" id="recordsDialog" aria-labelledby="recordsTitle"><header class="artist-dialog-header"><h2 id="recordsTitle">设计记录</h2><button class="artist-close" id="recordsClose" aria-label="关闭设计记录">×</button></header><div class="artist-content"><p>自动续画保留每个角色的最新进度；“保存设计版本”可保留多个创作阶段。</p><p>记录仅保存在本机当前浏览器，清除网站数据会移除记录。</p><div id="recordsList"></div></div></dialog>
+  <dialog class="artist-dialog" id="artistDialog" aria-labelledby="artistTitle">
+    <header class="artist-dialog-header"><span>MEET THE ARTIST / 关于艺术家</span><button class="artist-close" id="artistClose" aria-label="关闭艺术家介绍" autofocus>×</button></header>
+    <div class="artist-content">
+      <div class="artist-intro">
+        <div><h2 id="artistTitle">张赢</h2><p class="artist-english">ZHANG YING</p><p class="artist-meta">1990 年生于湖北武汉<br>毕业于湖北美术学院水彩专业<br>现工作、生活于上海</p></div>
+        <figure class="artist-photo"><img src="assets/artist/zhang-ying.jpg" alt="张赢作品集中的艺术家与作品现场照片" width="2688" height="1789" loading="lazy"><figcaption>选自《张赢作品集2026》</figcaption></figure>
+      </div>
+      <p class="artist-bio">张赢以水性材料为主要创作媒介，同时探索数字绘画与雕塑。以日常经验为线索，作品关注个体在社会结构中的情绪流动与精神状态。</p>
+      <p class="artist-bio">轻盈、幽默的视觉语言之下，是对理想与现实之间张力的思考。城乡结合部的成长经历，使其创作在市井叙事与内心象征之间展开，探索当代中国民间文化的情感结构与心理维度。</p>
+      <section class="artist-exhibitions" aria-labelledby="artistExhibitions"><h3 id="artistExhibitions">精选展览与项目</h3><ul>
+        <li><time>2026</time><div>异化星系运转系统K<small>个人项目 · ART ONO，首尔</small></div></li>
+        <li><time>2025</time><div>异化星系<small>个展 · 引号空间，上海</small></div></li>
+        <li><time>2025</time><div>异化图鉴<small>个展 · 艺直艺术中心，上海</small></div></li>
+        <li><time>2021</time><div>浮生<small>个展 · 12S ART SPACE，上海</small></div></li>
+      </ul></section>
+    </div>
+  </dialog>
+  <script type="module" src="artist.js?v=1"></script>
+  <dialog class="artist-dialog" id="journeyDialog" aria-labelledby="journeyTitle"><header class="artist-dialog-header"><h2 id="journeyTitle">宇宙旅行手册</h2><button class="artist-close" id="journeyClose" aria-label="关闭旅行手册">×</button></header><div class="journey-content"><p id="journeyStatus" role="status"></p><h3>下一站，认识谁？</h3><p id="neighborHint"></p><div id="neighborList" class="neighbor-grid"></div><h3>我的头像</h3><p class="journey-note">选个贴纸，下载正方形头像。仅保存在当前浏览器。</p><div id="postcardList" class="postcard-grid"></div></div></dialog>
+  <dialog class="artist-dialog" id="resetUniverseDialog" aria-labelledby="resetUniverseTitle" aria-describedby="resetUniverseDescription">
+    <header class="artist-dialog-header"><h2 id="resetUniverseTitle">让宇宙重新留白？</h2></header>
+    <div class="artist-content">
+      <p id="resetUniverseDescription">这会清空所有角色的填色、涂鸦、自动续画和设计存档，且无法撤销。</p>
+      <p>已解锁角色、完成进度和已生成的头像会保留。</p>
+      <p id="resetUniverseMessage" role="status"></p>
+      <div class="reset-universe-actions"><button id="resetUniverseCancel" autofocus>取消</button><button id="resetUniverseConfirm">确认清空所有填色</button></div>
+    </div>
+  </dialog>
+  <script type="module" src="i18n.js?v=1"></script>
+  <script type="module" src="app.js?v=language-71"></script>
+</body>
+</html>

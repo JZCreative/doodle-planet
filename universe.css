@@ -1,0 +1,59 @@
+/* A perspective space, not a grid of previews. Labels follow world positions. */
+body.home-mode .title-note,body.home-mode .universe-heading,body.home-mode .unlock-rule,body.home-mode .universe-footer>span,body.home-mode #saveStatus{display:none!important}
+body.home-mode #progressSummary{font-size:14px;font-weight:500;border:0;padding:4px 12px;opacity:.72;margin:2px auto;background:#ffffffc9}
+body.home-mode .universe-footer{left:auto;right:28px;width:auto;border:0;gap:10px;background:transparent}
+body.home-mode .resident-caption{opacity:0;transition:opacity .2s}
+body.home-mode .resident:hover .resident-caption,body.home-mode .resident:focus-visible .resident-caption,body.home-mode .resident.is-hovered .resident-caption{opacity:1}
+body.home-mode #starfield{display:none}
+body.home-mode .topbar:after{display:none}
+body.home-mode .app-shell{padding-top:12px;padding-bottom:10px;min-height:100svh}
+body.home-mode .topbar{height:60px}
+.universe-heading{padding:14px 0 0}
+.universe-heading h1{font-size:clamp(30px,3.4vw,46px);margin:10px 0 8px}
+.universe-heading p{font-size:12px}
+.universe-space{height:calc(100svh - 225px);min-height:350px;touch-action:none}
+.space-doodles{display:none}
+#homeViewport{pointer-events:auto;cursor:grab;touch-action:none}
+#homeViewport:active{cursor:grabbing}
+.resident-grid{display:block;inset:0;padding:0;pointer-events:none;overflow:hidden}
+.resident{position:absolute;transform:translate(-50%,-50%);width:max-content;height:25px;min-height:0;pointer-events:auto;white-space:nowrap;padding:3px 8px;opacity:.7}
+.resident:hover,.resident:focus-visible{opacity:1;background:#fff;border-radius:40%}
+/* More residents must not stretch the editor canvas below the viewport. */
+@media(min-width:801px){
+ body:not(.home-mode) .app-shell{height:100svh;min-height:0}
+ body:not(.home-mode) .topbar{flex-shrink:0}
+ body:not(.home-mode) .workspace{min-height:0;grid-template-rows:minmax(0,1fr)}
+ body:not(.home-mode) .model-rail,body:not(.home-mode) .tool-panel{max-height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+}
+.resident:disabled{visibility:hidden!important}
+.resident .resident-caption{position:static;gap:5px}
+.resident b{font-size:12px}
+.resident small{display:none}
+.resident .visit-arrow{font-size:12px}
+.universe-footer{padding:7px 0;font-size:10px}
+.universe-footer button{padding:5px 10px}
+body.entering #homeViewport{pointer-events:none}
+body.home-mode .universe-heading{padding-top:5px}
+body.home-mode .universe-heading h1{font-size:32px;margin:6px 0}
+body.home-mode #universe .universe-space{position:fixed;inset:0;height:100svh;min-height:0;z-index:0}
+body.home-mode #progressSummary,body.home-mode .unlock-rule{position:relative;z-index:3}
+body.home-mode .universe-heading{position:fixed;left:28px;bottom:68px;z-index:2;text-align:left;pointer-events:none;background:#ffffffd9;border-radius:15px;padding:8px 14px}
+body.home-mode .universe-heading .eyebrow{display:none}
+body.home-mode .universe-heading h1{font-size:22px}
+body.home-mode .universe-footer{position:fixed;left:auto;right:28px;bottom:15px;z-index:3;background:#ffffffd9;border:0;border-radius:16px;padding:8px 12px;gap:10px}
+@media(max-width:600px){body.home-mode .universe-heading{left:10px;bottom:92px}body.home-mode .universe-heading h1{font-size:18px}body.home-mode .universe-footer{left:auto;right:10px}}
+.sky-selector{position:absolute;z-index:4;right:8px;top:8px;display:flex;align-items:center;gap:5px;padding:6px;background:rgba(255,255,255,.92);border:1px solid #e5e5e5;border-radius:16px}
+.sky-selector>span{font-size:10px;color:#888;margin:0 5px}
+.sky-selector button{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid transparent;border-radius:10px;padding:5px 8px;font:inherit;font-size:11px;color:#888;cursor:pointer}
+.sky-selector button[aria-pressed=true]{border-color:#777;color:#222;background:#fff}
+.sky-selector button:hover{color:#222;background:#f5f5f5}
+.sky-selector button:focus-visible{outline:2px solid #555;outline-offset:2px}
+#birdTowerView{display:none}
+body.sky-dream #birdTowerView{display:inline-block}
+.sky-selector svg{width:33px;height:22px;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:600px){.sky-selector{right:4px;left:4px;justify-content:center}.sky-selector>span{display:none}.sky-selector button{font-size:10px;padding:4px}.sky-selector svg{width:25px}}
+@media(max-width:800px){
+ .universe-heading{padding-top:16px}.universe-heading h1{font-size:31px}
+ .universe-heading p{font-size:11px}.universe-space{height:calc(100svh - 226px);min-height:345px}
+ .resident b{font-size:11px}.universe-footer{gap:7px}.universe-footer>span:first-child{display:none}
+}

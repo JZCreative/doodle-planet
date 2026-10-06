@@ -1,0 +1,42 @@
+{
+  "name": "花椰树",
+  "source": "outputs/curve-broccoli/broccoli-master.3dm",
+  "faces": 123160,
+  "regions": [
+    {
+      "id": 0,
+      "name": "树干、分枝及双腿",
+      "faces": 65549
+    },
+    {
+      "id": 1,
+      "name": "蓬松树冠",
+      "faces": 56448
+    },
+    {
+      "id": 2,
+      "name": "左眉",
+      "faces": 247
+    },
+    {
+      "id": 3,
+      "name": "右眉",
+      "faces": 251
+    },
+    {
+      "id": 4,
+      "name": "左瞳孔",
+      "faces": 131
+    },
+    {
+      "id": 5,
+      "name": "右瞳孔",
+      "faces": 143
+    },
+    {
+      "id": 6,
+      "name": "笑嘴",
+      "faces": 391
+    }
+  ]
+}

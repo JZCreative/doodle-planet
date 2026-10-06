@@ -1,0 +1,13 @@
+body.portrait-mode .model-rail,body.portrait-mode .wish-card,body.portrait-mode #finishDesign,body.portrait-mode #designGoal,body.portrait-mode #postcardBtn,body.portrait-mode .float-note{display:none!important}
+body.portrait-mode .workspace{grid-template-columns:minmax(0,1fr) minmax(290px,340px)}
+body.portrait-preview .workspace{grid-template-columns:minmax(0,1fr)}
+body.portrait-preview .tool-panel{display:none!important}
+body.portrait-mode #viewport{top:100px;bottom:50px;left:8px;right:8px;max-width:calc((100svh - 300px)*2);margin-inline:auto;background:#fff;border:1.5px solid #333;border-radius:3px;box-shadow:5px 6px 0 #0000000c}
+body.portrait-mode .orbit-ring{display:none}
+body.portrait-mode #starfield{display:none}
+#portraitToolbar{position:absolute;left:16px;right:16px;top:8px;z-index:3;display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;background:#ffffffed;border-bottom:1px dashed #bbb;padding:10px 4px 16px}
+#portraitToolbar[hidden],#portraitToolbar button[hidden]{display:none}
+#portraitToolbar strong{font-size:22px}#portraitToolbar>span{font-size:12px;color:#666;flex:1;min-width:160px}
+#portraitToolbar>div{display:flex;gap:8px;flex-wrap:wrap}#portraitToolbar button{font:inherit;font-size:13px;background:white;color:#222;border:1.5px solid #333;border-radius:18px;padding:9px 14px;cursor:pointer}
+#portraitConfirm{background:#222!important;color:white!important}#portraitToolbar button:focus-visible{outline:3px solid #888;outline-offset:3px}
+@media(max-width:800px){body.portrait-mode .workspace{grid-template-columns:1fr;grid-template-rows:minmax(540px,70vh) auto}body.portrait-mode .stage-wrap{grid-row:1}body.portrait-mode .tool-panel{grid-row:2}body.portrait-preview .workspace{grid-template-rows:minmax(580px,80vh)}body.portrait-mode #viewport{top:145px}#portraitToolbar{left:4px;right:4px}body.home-mode .universe-footer{right:12px;max-width:calc(100vw - 24px);flex-wrap:wrap;justify-content:flex-end}}

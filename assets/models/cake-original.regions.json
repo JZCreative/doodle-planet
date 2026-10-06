@@ -1,0 +1,83 @@
+{
+  "name": "怪手蛋糕塔",
+  "faces": 188924,
+  "regions": [
+    {
+      "id": 0,
+      "name": "星形底座",
+      "faces": 23627
+    },
+    {
+      "id": 1,
+      "name": "下柱体",
+      "faces": 13123
+    },
+    {
+      "id": 2,
+      "name": "中层圆台",
+      "faces": 20875
+    },
+    {
+      "id": 3,
+      "name": "上柱体",
+      "faces": 21831
+    },
+    {
+      "id": 4,
+      "name": "滴落台沿",
+      "faces": 44970
+    },
+    {
+      "id": 5,
+      "name": "顶部台面",
+      "faces": 35450
+    },
+    {
+      "id": 6,
+      "name": "手形装饰 1",
+      "faces": 3332
+    },
+    {
+      "id": 7,
+      "name": "手形装饰 2",
+      "faces": 4325
+    },
+    {
+      "id": 8,
+      "name": "手形装饰 3",
+      "faces": 4573
+    },
+    {
+      "id": 9,
+      "name": "手形装饰 4",
+      "faces": 3900
+    },
+    {
+      "id": 10,
+      "name": "手形装饰 5",
+      "faces": 3548
+    },
+    {
+      "id": 11,
+      "name": "手形装饰 6",
+      "faces": 2450
+    },
+    {
+      "id": 12,
+      "name": "手形装饰 7",
+      "faces": 1959
+    },
+    {
+      "id": 13,
+      "name": "手形装饰 8",
+      "faces": 2849
+    },
+    {
+      "id": 14,
+      "name": "手形装饰 9",
+      "faces": 2112
+    }
+  ],
+  "source": "white cake topper 3d model.stl",
+  "geometry": "Original structure, nine connected hand decorations, simple tier boundaries; source unchanged."
+}

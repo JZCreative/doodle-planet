@@ -1,0 +1,47 @@
+{
+  "name": "盘盘牙蛇",
+  "faces": 54004,
+  "regions": [
+    {
+      "id": 0,
+      "name": "上层蛇身",
+      "faces": 8640
+    },
+    {
+      "id": 1,
+      "name": "蛇头",
+      "faces": 7052
+    },
+    {
+      "id": 2,
+      "name": "尖牙",
+      "faces": 960
+    },
+    {
+      "id": 3,
+      "name": "眼白",
+      "faces": 8048
+    },
+    {
+      "id": 4,
+      "name": "瞳孔",
+      "faces": 4016
+    },
+    {
+      "id": 5,
+      "name": "叶形尾尖",
+      "faces": 5036
+    },
+    {
+      "id": 6,
+      "name": "中层蛇身",
+      "faces": 5280
+    },
+    {
+      "id": 7,
+      "name": "下层蛇身与尾巴",
+      "faces": 14972
+    }
+  ],
+  "source": "Modeled in local Blender from supplied artist drawing"
+}

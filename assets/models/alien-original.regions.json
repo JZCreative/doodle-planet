@@ -1,0 +1,62 @@
+{
+  "name": "圈圈外星人",
+  "source": "stylized alien sculpture 3d model.stl",
+  "faces": 134499,
+  "regions": [
+    {
+      "id": 0,
+      "name": "身体与四肢",
+      "faces": 47178
+    },
+    {
+      "id": 1,
+      "name": "头部",
+      "faces": 48598
+    },
+    {
+      "id": 2,
+      "name": "颈圈 1",
+      "faces": 6814
+    },
+    {
+      "id": 3,
+      "name": "颈圈 2",
+      "faces": 7114
+    },
+    {
+      "id": 4,
+      "name": "颈圈 3",
+      "faces": 16938
+    },
+    {
+      "id": 5,
+      "name": "眼白 1",
+      "faces": 2090
+    },
+    {
+      "id": 6,
+      "name": "瞳孔 1",
+      "faces": 589
+    },
+    {
+      "id": 7,
+      "name": "眼白 2",
+      "faces": 2540
+    },
+    {
+      "id": 8,
+      "name": "瞳孔 2",
+      "faces": 740
+    },
+    {
+      "id": 9,
+      "name": "嘴巴",
+      "faces": 1044
+    },
+    {
+      "id": 10,
+      "name": "肚子嘴巴",
+      "faces": 854
+    }
+  ]
+}

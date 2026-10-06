@@ -1,0 +1,122 @@
+{
+  "name": "长身白猫",
+  "source": "white cat 3d model.stl",
+  "faces": 224160,
+  "regions": [
+    {
+      "id": 0,
+      "name": "身体、四肢与弯尾",
+      "faces": 168619
+    },
+    {
+      "id": 1,
+      "name": "左眼白",
+      "faces": 2262
+    },
+    {
+      "id": 2,
+      "name": "右眼白",
+      "faces": 2517
+    },
+    {
+      "id": 3,
+      "name": "左瞳孔",
+      "faces": 314
+    },
+    {
+      "id": 4,
+      "name": "右瞳孔",
+      "faces": 282
+    },
+    {
+      "id": 5,
+      "name": "左内耳",
+      "faces": 1416
+    },
+    {
+      "id": 6,
+      "name": "右内耳",
+      "faces": 1174
+    },
+    {
+      "id": 7,
+      "name": "鼻头",
+      "faces": 5869
+    },
+    {
+      "id": 8,
+      "name": "脚掌 1",
+      "faces": 5545
+    },
+    {
+      "id": 9,
+      "name": "脚掌 2",
+      "faces": 6001
+    },
+    {
+      "id": 10,
+      "name": "脚掌 3",
+      "faces": 7941
+    },
+    {
+      "id": 11,
+      "name": "脚掌 4",
+      "faces": 8265
+    },
+    {
+      "id": 12,
+      "name": "胡须 1",
+      "faces": 1422
+    },
+    {
+      "id": 13,
+      "name": "胡须 2",
+      "faces": 1513
+    },
+    {
+      "id": 14,
+      "name": "胡须 3",
+      "faces": 1442
+    },
+    {
+      "id": 15,
+      "name": "胡须 4",
+      "faces": 1353
+    },
+    {
+      "id": 16,
+      "name": "胡须 5",
+      "faces": 1360
+    },
+    {
+      "id": 17,
+      "name": "胡须 6",
+      "faces": 1286
+    },
+    {
+      "id": 18,
+      "name": "胡须 7",
+      "faces": 1515
+    },
+    {
+      "id": 19,
+      "name": "胡须 8",
+      "faces": 1423
+    },
+    {
+      "id": 20,
+      "name": "胡须 9",
+      "faces": 1312
+    },
+    {
+      "id": 21,
+      "name": "胡须 10",
+      "faces": 1329
+    }
+  ],
+  "geometry": "Original STL display derivative; no sculpting or reconstruction.",
+  "eyeSurfaceDepth": [
+    0.6,
+    0.84
+  ]
+}

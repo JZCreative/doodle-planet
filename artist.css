@@ -1,0 +1,28 @@
+#artistBtn{white-space:nowrap;color:#171717;background:#fff;font-size:14px}
+body.home-mode .top-actions{order:2}
+body.home-mode .topbar:after{order:1}
+.artist-dialog{color:#202020;background:#fff;border:2px solid #191919;border-radius:18px 23px 16px 21px;width:min(790px,calc(100vw - 32px));max-height:calc(100dvh - 40px);padding:0;overflow:auto;box-sizing:border-box;box-shadow:7px 8px 0 #1112;overscroll-behavior:contain}
+.artist-dialog::backdrop{background:rgba(255,255,255,.78);backdrop-filter:blur(5px)}
+.artist-dialog-header{position:sticky;top:0;background:#fff;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:17px 26px;border-bottom:1px dashed #aaa}
+.artist-dialog-header span{font-size:11px;letter-spacing:2px}
+.artist-close{border:1.5px solid #222;border-radius:50%;width:34px;height:34px;background:#fff;color:#111;font-size:24px;cursor:pointer;line-height:1}
+.artist-close:hover{background:#f1f1ed}
+.artist-dialog button:focus-visible,#artistBtn:focus-visible{outline:3px solid #555;outline-offset:4px}
+.artist-content{padding:26px 32px 30px}
+.artist-intro{display:grid;grid-template-columns:1fr 220px;gap:30px;align-items:center;margin-bottom:25px}
+.artist-intro h2{font-size:42px;letter-spacing:8px;margin:0 0 7px;font-weight:600}
+.artist-english{font-size:13px;letter-spacing:4px;margin:0 0 18px}
+.artist-meta{font-size:12px;line-height:1.9;color:#555;margin:0}
+.artist-photo{margin:0;transform:rotate(1deg)}
+.artist-photo img{width:100%;height:auto;display:block;border:1px solid #222;padding:5px;box-sizing:border-box}
+.artist-photo figcaption{font-size:10px;color:#666;margin-top:6px;text-align:right}
+.artist-bio{font-size:14px;line-height:1.95;margin:0 0 13px;text-align:justify}
+.artist-exhibitions{margin-top:24px;border-top:1px dashed #aaa;padding-top:18px}
+.artist-exhibitions h3{margin:0 0 14px;font-size:14px;letter-spacing:2px}
+.artist-exhibitions ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.artist-exhibitions li{display:grid;grid-template-columns:44px 1fr;gap:12px;font-size:13px;line-height:1.65}
+.artist-exhibitions time{font-size:11px;color:#777;padding-top:2px}
+.artist-exhibitions small{display:block;color:#777;font-size:11px}
+.artist-source{font-size:10px;color:#777;border-top:1px dashed #ccc;padding-top:15px;margin:22px 0 0}
+@media(max-width:1100px){body:not(.home-mode) .title-note{display:none}}
+@media(max-width:600px){body.home-mode .topbar:after{display:none}.artist-content{padding:22px}.artist-dialog-header{padding:13px 20px}.artist-intro{grid-template-columns:1fr 110px;gap:15px}.artist-intro h2{font-size:32px}.artist-english{font-size:10px;letter-spacing:2px}.artist-meta{font-size:11px}.artist-bio{font-size:13px}#artistBtn{padding:8px;font-size:12px}.top-actions{gap:4px}}

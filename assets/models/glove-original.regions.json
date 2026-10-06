@@ -1,0 +1,67 @@
+{
+  "name": "微笑拳套",
+  "source": "/Users/jiyutao/Documents/湖南 MAC 同步/3D打印/张赢/boxing glove 3d model.stl",
+  "faces": 240475,
+  "regions": [
+    {
+      "id": 0,
+      "name": "拳套主体及拇指",
+      "faces": 139217
+    },
+    {
+      "id": 1,
+      "name": "腕口底边",
+      "faces": 13119
+    },
+    {
+      "id": 2,
+      "name": "腕带",
+      "faces": 37829
+    },
+    {
+      "id": 3,
+      "name": "左眼白",
+      "faces": 7129
+    },
+    {
+      "id": 4,
+      "name": "左瞳孔",
+      "faces": 4776
+    },
+    {
+      "id": 5,
+      "name": "右眼白",
+      "faces": 5520
+    },
+    {
+      "id": 6,
+      "name": "右瞳孔",
+      "faces": 2533
+    },
+    {
+      "id": 7,
+      "name": "斜笑嘴",
+      "faces": 9492
+    },
+    {
+      "id": 8,
+      "name": "笑嘴上缘",
+      "faces": 18901
+    },
+    {
+      "id": 9,
+      "name": "腕带左眼",
+      "faces": 223
+    },
+    {
+      "id": 10,
+      "name": "腕带右眼",
+      "faces": 175
+    },
+    {
+      "id": 11,
+      "name": "腕带笑嘴",
+      "faces": 1561
+    }
+  ]
+}

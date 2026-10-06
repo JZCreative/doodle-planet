@@ -1,0 +1,135 @@
+{
+  "bunny": {
+    "src": "./assets/artist/drawings/bunny.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "78 208 594 1253",
+    "source": "codex-clipboard-239b6ab8-f042-4d20-9440-75ed580b84b6.jpg"
+  },
+  "sun": {
+    "src": "./assets/artist/drawings/sun.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "75 331 938 1094",
+    "source": "codex-clipboard-4210ef16-263b-4100-938f-e28c8ac3818d.jpg"
+  },
+  "cat": {
+    "src": "./assets/artist/drawings/cat.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "208 280 670 974",
+    "source": "codex-clipboard-f04a2f36-0c0a-4bc7-9d53-ea0e8c53535f.jpg"
+  },
+  "bird": {
+    "src": "./assets/artist/drawings/bird.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "318 23 426 1477",
+    "source": "codex-clipboard-f6fe45d5-fce2-451a-8f0c-b3a3e8aad954.jpg"
+  },
+  "broccoli": {
+    "src": "./assets/artist/drawings/broccoli.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "183 78 719 1236",
+    "source": "codex-clipboard-fc0a9d15-bcff-4456-8192-f2d5a6f17fc9.jpg"
+  },
+  "skull": {
+    "src": "./assets/artist/drawings/skull.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "127 307 831 852",
+    "source": "codex-clipboard-7f151731-20b3-4989-99f6-bb7406ada760.jpg"
+  },
+  "glove": {
+    "src": "./assets/artist/drawings/glove.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "177 210 792 1031",
+    "source": "codex-clipboard-52aa8944-9e45-4f61-9dc6-91554b9c58bd.jpg"
+  },
+  "apple": {
+    "src": "./assets/artist/drawings/apple.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "261 203 556 1084",
+    "source": "codex-clipboard-ea92e56d-26de-4af6-b857-1a7b7a11402c.jpg"
+  },
+  "whitecat": {
+    "src": "./assets/artist/drawings/whitecat.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "87 518 948 393",
+    "source": "codex-clipboard-e28a3c7a-cca8-4e7e-bc0d-7ecc3894b49d.jpg"
+  },
+  "whitebird": {
+    "src": "./assets/artist/drawings/whitebird.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "212 113 708 1168",
+    "source": "codex-clipboard-5c5ee7b2-a730-46c9-9943-ecc37469daf6.jpg"
+  },
+  "chair": {
+    "src": "./assets/artist/drawings/chair.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "190 152 634 1101",
+    "source": "codex-clipboard-ece27280-24a5-44cb-a4c9-afde372be644.jpg"
+  },
+  "house": {
+    "src": "./assets/artist/drawings/house.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "244 171 628 1091",
+    "source": "codex-clipboard-5d92862a-b3dc-419b-aa14-34c5440347c7.jpg"
+  },
+  "wolf": {
+    "src": "./assets/artist/drawings/wolf.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "102 426 923 620",
+    "source": "codex-clipboard-6effb50e-39b2-4046-85e2-79ffc34a4327.jpg"
+  },
+  "cryingsun": {
+    "src": "./assets/artist/drawings/cryingsun.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "51 130 993 1041",
+    "source": "codex-clipboard-d5f15889-07e8-48b0-a4b8-66c9664483d6.jpg"
+  },
+  "cake": {
+    "src": "./assets/artist/drawings/cake.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "191 262 641 913",
+    "source": "codex-clipboard-9f36bed3-0bbc-4f98-b92a-8c608e01252b.jpg"
+  },
+  "fingerbird": {
+    "src": "./assets/artist/drawings/fingerbird.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "137 364 865 744",
+    "source": "codex-clipboard-72d94c0e-5395-4d96-aced-d451b01e6d26.jpg"
+  },
+  "coilsnake": {
+    "src": "./assets/artist/drawings/coilsnake.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "86 379 958 651",
+    "source": "codex-clipboard-a7f1db5e-27ca-4ec0-98db-615e76af74de.jpg"
+  },
+  "facestack": {
+    "src": "./assets/artist/drawings/facestack.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "251 121 558 1152",
+    "source": "codex-clipboard-982f82fb-bf4a-4e53-882c-8d7bd8ba9845.jpg"
+  },
+  "alien": {
+    "src": "./assets/artist/drawings/alien.jpg",
+    "width": 1079,
+    "height": 1527,
+    "viewBox": "255 244 576 1088",
+    "source": "codex-clipboard-313e26d1-74d8-4747-bcb5-95f922e8d828.jpg"
+  }
+}
