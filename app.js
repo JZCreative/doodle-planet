@@ -7,7 +7,7 @@ import { arrangePortrait,framePortrait } from './group-portrait.js?v=2';
 import { createStarAtmosphere } from './star-atmosphere.js?v=3';
 import { createMeteorEncounters } from './meteor-encounters.js?v=3';
 import { createProgress } from './progress.js?v=6';
-import { createJourney } from './journey.js?v=8';
+import { createJourney } from './journey.js?v=9';
 import { createCharacterPortraits } from './character-portraits.js?v=1';
 import { installArtistThumbnails } from './artist-thumbnails.js?v=20';
 installArtistThumbnails().catch(error=>console.warn('原稿缩略图加载失败',error));
@@ -188,6 +188,34 @@ scene.add(root);
 let current = null;
 let postcardCapture=null;
 function capturePostcard(){return new Promise((resolve,reject)=>{if(isHome){reject(new Error('请先进入填色'));return;}postcardCapture={resolve,reject};});}
+function captureAvatarSource(){
+  // Re-render the 3D artwork, rather than enlarging a small on-screen screenshot.
+  const size=renderer.getSize(new THREE.Vector2()),ratio=renderer.getPixelRatio();
+  const scale=Math.min(2160/Math.min(size.x,size.y),4096/Math.max(size.x,size.y));
+  const w=Math.max(1,Math.round(size.x*scale)),h=Math.max(1,Math.round(size.y*scale));
+  const lineWidth=paperMaterial.uniforms.width.value;
+  const visible=[...modelGroups.values()].filter(g=>g.visible);
+  const overrides=scene.overrideMaterial;
+  const creaseVisibility=visible.map(g=>g.userData.crease.visible);
+  try{
+    renderer.setPixelRatio(1);renderer.setSize(w,h,false);
+    paperTarget.setSize(w,h);partTarget.setSize(w,h);
+    paperMaterial.uniforms.pixel.value.set(1/w,1/h);
+    paperMaterial.uniforms.width.value=lineWidth*scale/ratio;
+    visible.forEach(g=>g.userData.crease.visible=false);scene.overrideMaterial=partMaterial;
+    renderer.setRenderTarget(partTarget);renderer.render(scene,camera);
+    scene.overrideMaterial=overrides;visible.forEach((g,i)=>g.userData.crease.visible=creaseVisibility[i]);
+    renderer.setRenderTarget(paperTarget);renderer.render(scene,camera);
+    renderer.setRenderTarget(null);renderer.render(paperScene,paperCamera);
+    return renderer.domElement.toDataURL('image/png');
+  }finally{
+    scene.overrideMaterial=overrides;visible.forEach((g,i)=>g.userData.crease.visible=creaseVisibility[i]);
+    renderer.setRenderTarget(null);renderer.setPixelRatio(ratio);renderer.setSize(size.x,size.y,false);
+    const buffer=renderer.getDrawingBufferSize(new THREE.Vector2());
+    paperTarget.setSize(buffer.x,buffer.y);partTarget.setSize(buffer.x,buffer.y);
+    paperMaterial.uniforms.pixel.value.set(1/buffer.x,1/buffer.y);paperMaterial.uniforms.width.value=lineWidth;
+  }
+}
 let selectedColor = '#ff6157';
 let currentTool = 'fill';
 let edgeScale = 1.014;
@@ -521,7 +549,7 @@ function animate() {
   if(isHome)renderer.render(starAtmosphere.scene,homeCamera);
   renderer.clearDepth();renderer.render(paperScene,paperCamera);
   renderer.autoClear=true;
-  if(postcardCapture){const pending=postcardCapture;postcardCapture=null;try{pending.resolve(renderer.domElement.toDataURL('image/png'));}catch(e){pending.reject(e);}}
+  if(postcardCapture){const pending=postcardCapture;postcardCapture=null;try{pending.resolve(captureAvatarSource());}catch(e){pending.reject(e);}}
 }
 function layoutResidents(){
   const frame=viewport.getBoundingClientRect();

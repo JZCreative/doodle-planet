@@ -1,5 +1,5 @@
 import {STORIES} from './character-stories.js?v=3';
-import {AVATAR_STICKERS,renderAvatar,avatarControls} from './avatar.js?v=2';
+import {AVATAR_STICKERS,renderAvatar,avatarControls} from './avatar.js?v=3';
 
 export function createJourney({models,progress,current,capture,enter,portrait}){
   const dialog=document.querySelector('#journeyDialog'),status=document.querySelector('#journeyStatus');
@@ -48,7 +48,7 @@ export function createJourney({models,progress,current,capture,enter,portrait}){
         const item=document.createElement('article');item.className='postcard-item';const img=document.createElement('img');img.alt=`${models[card.model].name}的正方形头像`;img.src=await renderAvatar(card);
         const stickers=document.createElement('div');stickers.className='avatar-stickers';stickers.setAttribute('role','group');stickers.setAttribute('aria-label','选择头像贴纸');
         for(const [id,label] of AVATAR_STICKERS){const button=document.createElement('button');button.textContent=label;button.setAttribute('aria-pressed',String((card.sticker||'wow')===id));button.onclick=async()=>{stickers.querySelectorAll('button').forEach(b=>b.disabled=true);try{const next={...card,sticker:id};const src=await renderAvatar(next);await progress.saveCard(next);Object.assign(card,next);img.src=src;stickers.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));status.textContent='贴纸已保存';}catch{status.textContent='贴纸未能保存，请重试';}finally{stickers.querySelectorAll('button').forEach(b=>b.disabled=false);}};stickers.append(button);}
-        const download=document.createElement('button');download.textContent='下载头像 ↓';download.onclick=()=>{const a=document.createElement('a');a.href=img.src;a.download=`Doodle-Planet-avatar-${card.model}-${card.date}.png`;a.click();};
+        const download=document.createElement('button');download.textContent='下载头像 ↓';download.onclick=async()=>{download.disabled=true;try{const src=await renderAvatar({...card});const a=document.createElement('a');a.href=src;a.download=`Doodle-Planet-avatar-${card.model}-${card.date}.png`;a.click();}catch{status.textContent='头像未能保存，请回到填色页重试。作品进度不受影响。';}finally{download.disabled=false;}};
         const revisit=document.createElement('button');revisit.textContent='再画一版';revisit.onclick=async()=>{dialog.close();await enter(card.model,false);};
         item.append(img,stickers,avatarControls(card,img,c=>progress.saveCard(c),status),download,revisit);list.append(item);
       }

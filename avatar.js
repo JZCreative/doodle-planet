@@ -1,4 +1,5 @@
 export const AVATAR_STICKERS=[['none','无贴纸'],['wow','✦ WOW'],['hey','● HEY!'],['cool','◆ COOL'],['yay','▰ YAY!']];
+export const AVATAR_EXPORT_SIZE=1080;
 
 export async function renderAvatar(card){
   const image=new Image();image.src=card.image;await image.decode();
@@ -9,7 +10,11 @@ export async function renderAvatar(card){
   let left=scan.width,top=scan.height,right=0,bottom=0;
   for(let y=0;y<scan.height;y+=2)for(let x=0;x<scan.width;x+=2){const i=(y*scan.width+x)*4;if(pixels[i+3]>32&&Math.min(pixels[i],pixels[i+1],pixels[i+2])<230){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y);}}
   if(right<=left||bottom<=top){left=0;top=0;right=scan.width;bottom=scan.height;}
-  const c=document.createElement('canvas');c.width=c.height=1024;const ctx=c.getContext('2d');
+  const c=document.createElement('canvas');c.width=c.height=AVATAR_EXPORT_SIZE;const ctx=c.getContext('2d');
+  // Keep the saved sticker coordinates in their original 1024-unit space.
+  // Draw into a native 1080px canvas, including vector stickers and text.
+  ctx.scale(AVATAR_EXPORT_SIZE/1024,AVATAR_EXPORT_SIZE/1024);
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
   ctx.fillStyle='#fff';ctx.fillRect(0,0,1024,1024);
   const width=right-left+4,height=bottom-top+4,scale=Math.min(820/width,820/height);
   ctx.drawImage(image,Math.max(0,left-2),Math.max(0,top-2),width,height,(1024-width*scale)/2,(1024-height*scale)/2,width*scale,height*scale);
