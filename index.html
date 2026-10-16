@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="group-portrait.css?v=2" />
   <link rel="stylesheet" href="artist-thumbnails.css?v=1" />
   <link rel="stylesheet" href="i18n.css?v=1" />
+  <link rel="stylesheet" href="artist-stage.css?v=3" />
   <script type="importmap">
   {"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}
   </script>
@@ -44,6 +45,11 @@
     </header>
 
     <section id="universe" aria-label="手绘宇宙首页">
+      <nav class="scene-switcher" aria-label="切换场景">
+        <button data-scene="universe" aria-pressed="true">✧ 星空漫游</button>
+        <button data-scene="artist-stage" aria-pressed="false" disabled>▱ 手绘剧场</button>
+      </nav>
+      <p id="stageNote" class="stage-note" role="status" hidden>四张原画，一座小剧场 · 拖动发现前后层次</p>
       <p id="progressSummary" role="status">已认识 5 / 19</p><p class="unlock-rule">完成一件作品，任选一位新朋友 · 3 个分区或 3 笔即可完成</p>
       <div class="universe-heading"><span class="eyebrow">A LITTLE UNIVERSE, ALL YOURS.</span><h1>奇思妙想，慢慢漂<span>✳</span></h1><p>拖动环绕 · 悬停让朋友停一停 · 点击开始填色</p></div>
       <div class="universe-space" id="universeSpace">
@@ -52,7 +58,7 @@
         <div class="sky-surprises" hidden style="display:none"><button id="sleepyMoon" aria-label="和月亮打招呼" aria-pressed="false">☾</button><button id="rainCloud" aria-label="轻碰云朵，下一场彩色雨">☁</button><button id="hiddenTrail" aria-label="沿着虚线寻找新朋友">↝</button></div>
         <div id="skyWhisper" class="sky-whisper" role="status"></div><div id="colorRain" class="color-rain" aria-hidden="true"></div>
       </div>
-      <div class="universe-footer"><span>轻轻相碰，换个方向再出发</span><span id="universeStatus" role="status">正在叫醒宇宙居民…</span><button id="portraitBtn" disabled>宇宙合照</button><button id="resetUniverseBtn" aria-haspopup="dialog">重置宇宙</button><button id="convergenceBtn">回到中央 ↗</button><button id="homeMotion" aria-pressed="true">暂停漂浮 Ⅱ</button></div>
+      <div class="universe-footer"><span>轻轻相碰，换个方向再出发</span><span id="universeStatus" role="status">正在叫醒宇宙居民…</span><button id="stageFrame" hidden>合影角度 ↗</button><button id="stageShuffle" hidden>换一组朋友 ↻</button><button id="stageReposition" hidden>随机位置 ⤨</button><button id="portraitBtn" disabled>宇宙合照</button><button id="resetUniverseBtn" aria-haspopup="dialog">重置宇宙</button><button id="convergenceBtn">回到中央 ↗</button><button id="homeMotion" aria-pressed="true">暂停漂浮 Ⅱ</button></div>
     </section>
     <section class="workspace" hidden>
       <aside class="model-rail paper-panel" aria-label="选择角色">
@@ -156,7 +162,7 @@
       </aside>
 
       <section class="stage-wrap" aria-label="3D 填色画布">
-        <div id="portraitToolbar" hidden><strong>宇宙合照</strong><span id="portraitHint" role="status"></span><div><button id="portraitShuffle">换一组 ↻</button><button id="portraitConfirm">就这组，开始涂鸦 ↗</button><button id="portraitExport" hidden>保存合照图片 ↓</button></div></div>
+        <div id="portraitToolbar" hidden><strong>宇宙合照</strong><span id="portraitHint" role="status"></span><div><button id="portraitShuffle">换一组 ↻</button><button id="portraitReposition" hidden>随机位置 ⤨</button><button id="portraitStageMotion" hidden aria-pressed="true">暂停动态 Ⅱ</button><button id="portraitConfirm">就这组，开始涂鸦 ↗</button><button id="portraitExport" hidden>保存合照图片 ↓</button></div></div>
         <div class="orbit-ring ring-one"></div>
         <div class="orbit-ring ring-two"></div>
         <div id="viewport"></div>
@@ -272,8 +278,8 @@
       <div class="reset-universe-actions"><button id="resetUniverseCancel" autofocus>取消</button><button id="resetUniverseConfirm">确认清空所有填色</button></div>
     </div>
   </dialog>
-  <script type="module" src="i18n.js?v=1"></script>
+  <script type="module" src="i18n.js?v=3"></script>
   <script type="module" src="background-music.js?v=1"></script>
-  <script type="module" src="app.js?v=avatar-1080-72"></script>
+  <script type="module" src="app.js?v=artist-stage-motion-74"></script>
 </body>
 </html>

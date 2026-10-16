@@ -31,12 +31,16 @@ Built with HTML, CSS, JavaScript and Three.js / WebGL, with local saves and Canv
 ## 体验说明 · Playing
 
 - 拖动环绕宇宙，点击角色进入涂鸦；支持中文 / English 切换。
+- 首页可切换「星空漫游」与「手绘剧场」：四张艺术家原画组成前后分层的舞台，原生 3D 角色穿插其中，轻轻摇摆、偶尔小跳。
+- 「换一组朋友」更换出场角色；「随机位置」调整当前角色站位并保留配色。支持暂停动态，也可进入宇宙合照，确认后定格涂鸦、保存及导出。
 - 当前为展览预览版本：19 / 19 个角色全部解锁。
 - 设计记录保存在当前浏览器本地，不会上传服务器，也不会跨设备同步。清除浏览器数据会清除这些记录。
 - 首次访问需加载 3D 模型，请稍候；建议使用支持 WebGL 的现代桌面浏览器。
 - 本地版本与线上版本使用不同的网站存储空间，本地已有填色不会自动转移。
 
 Drag to explore and click a character to paint. All 19 characters are unlocked in this preview. Designs are saved locally in your browser, not on a server. They do not sync between devices or between the local and online sites. Clearing browser data removes local saves. Initial model loading may take a moment; a modern desktop browser with WebGL is recommended.
+
+Switch between **Star roam** and **Paper theater** on the homepage. Four original artist drawings form upright, layered scenery around the native 3D characters, who sway gently and occasionally hop. **Change cast** selects different friends; **Random positions** rearranges the current cast while preserving their colors. Pause the motion at any time, or enter a Universe portrait and confirm to freeze the composition for coloring, saving and export.
 
 ## 本地运行 · Run locally
 

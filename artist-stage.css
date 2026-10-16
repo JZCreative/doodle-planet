@@ -1,0 +1,26 @@
+.scene-switcher{position:fixed;left:28px;bottom:22px;z-index:4;display:flex;gap:4px;align-items:center;padding:5px;border:1px solid #d7d7d7;border-radius:30px;background:#fffffff2;box-shadow:0 3px 16px #00000006}
+.scene-switcher button{border:0;border-radius:22px;background:transparent;color:#777;padding:10px 16px;font:inherit;font-size:13px;cursor:pointer}
+.scene-switcher button[aria-pressed=true]{background:#191919;color:white}
+.scene-switcher button:focus-visible{outline:2px dashed #222;outline-offset:4px}
+.scene-switcher button:disabled{opacity:.45;cursor:wait}
+.stage-note{position:fixed;left:32px;top:108px;z-index:3;pointer-events:none;font-size:11px;color:#777;letter-spacing:.06em;background:#ffffffc9;border-radius:10px;padding:8px 10px}
+body.artist-stage #convergenceBtn{display:none}
+body.artist-stage.home-mode .universe-footer{max-width:calc(100vw - 290px);flex-wrap:wrap;justify-content:flex-end}
+body.home-mode .universe-footer button[hidden]{display:none}
+body.artist-stage .resident{pointer-events:none}
+body.artist-stage .resident:focus-visible{pointer-events:auto}
+body.artist-stage .resident.is-hovered{background:#fffffff0;border-radius:20px}
+body.artist-stage.entering .scene-switcher{pointer-events:none;opacity:.5}
+body.stage-portrait #spinBtn{display:none}
+body.stage-portrait.portrait-preview #viewport{top:145px}
+@media(max-width:800px){
+ .scene-switcher{left:50%;bottom:112px;transform:translateX(-50%);white-space:nowrap}
+ .scene-switcher button{padding:8px 13px;font-size:12px}
+ body.artist-stage .scene-switcher{bottom:154px}
+ .stage-note{top:140px;left:15px;font-size:10px}
+ body.home-mode .universe-footer{left:50%;right:auto;bottom:12px;transform:translateX(-50%);width:calc(100vw - 24px);max-width:360px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));white-space:nowrap;gap:6px;padding:6px}
+ body.home-mode .universe-footer button{padding:7px;font-size:11px;min-height:36px}
+ body.artist-stage.home-mode .universe-footer{max-width:360px}
+ body.stage-portrait.portrait-preview #viewport{top:200px}
+}
+@media(min-width:480px) and (max-width:800px){body.stage-portrait.portrait-preview #viewport{top:145px}}

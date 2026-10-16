@@ -20,7 +20,7 @@ export function createCharacterPortraits({groups,models,paperMaterial,partMateri
     group.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(mesh),center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3());
     const span=Math.max(size.y,size.x*280/320)*1.22;
     const eye=new THREE.OrthographicCamera(-span*320/280/2,span*320/280/2,span/2,-span/2,.01,100);eye.position.copy(center).add(new THREE.Vector3(0,0,10));eye.lookAt(center);
-    const ids=partMaterial.clone();ids.uniforms.locked.value=0;ids.side=THREE.DoubleSide;crease.visible=false;scene.overrideMaterial=ids;
+    const ids=partMaterial.clone();ids.uniforms.locked.value=0;ids.uniforms.cutout.value=false;ids.uniforms.cutoutMap.value=null;ids.side=THREE.DoubleSide;crease.visible=false;scene.overrideMaterial=ids;
     renderer.setRenderTarget(parts);renderer.render(scene,eye);scene.overrideMaterial=null;crease.visible=true;
     renderer.setRenderTarget(color);renderer.render(scene,eye);renderer.setRenderTarget(null);renderer.render(screen,camera);
     const image=renderer.domElement.toDataURL('image/png');cache.set(id,image);crease.material.dispose();ids.dispose();return image;

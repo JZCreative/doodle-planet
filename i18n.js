@@ -55,6 +55,15 @@ const words={
  '我还不认识这里的颜色，可以借我一点地球的心情吗？':'I do not know the colors here yet. Could you lend me a little Earth feeling?',
  '说：':' says: ','关闭':'Close ','首页':'Home','手绘宇宙首页':'Hand-drawn universe','3D 填色画布':'3D coloring canvas','选择角色':'Choose a character',
 };
+Object.assign(words,{
+ '切换场景':'Switch scene','星空漫游':'Star roam','手绘剧场':'Paper theater','合影角度':'Photo angle','换一组朋友':'Change cast',
+ '随机位置':'Random positions','暂停动态':'Pause motion','继续动态':'Resume motion',
+ '同一组朋友，换个站位 · 确认后定格，开始涂鸦':'Same friends, new places · Confirm to freeze and start coloring',
+ '四张原画，一座小剧场 · 拖动发现前后层次':'Four original drawings, one little theater · Drag to discover its layers',
+ '正在展开艺术家的布景…':'Unfolding the artist’s scenery…','布景加载失败，请重试':'Scenery could not load. Please try again.',
+ '原画布景 × 3D 朋友 · 拖动寻找你的合影角度':'Original scenery × 3D friends · Drag to find your photo angle',
+ '合照已生成 · ':'Portrait ready · ','再次下载':'Download again','合照生成失败，请重试':'Portrait could not be generated. Please try again.',
+});
 for(const [zh,en] of Object.values(CHARACTER_NAMES))words[zh]=en;
 const entries=Object.entries(words).sort((a,b)=>b[0].length-a[0].length);
 export function translate(text){

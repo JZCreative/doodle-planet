@@ -4,11 +4,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { attachInk, stampInk } from './ink.js';
 import { createFloatingResidents } from './floating-residents.js?v=3';
 import { arrangePortrait,framePortrait } from './group-portrait.js?v=2';
+import { createArtistStage,arrangeStage,stageView,randomizeStagePositions,createStageMotion,snapshotStageLayout } from './artist-stage.js?v=2';
 import { createStarAtmosphere } from './star-atmosphere.js?v=3';
 import { createMeteorEncounters } from './meteor-encounters.js?v=3';
 import { createProgress } from './progress.js?v=6';
 import { createJourney } from './journey.js?v=9';
-import { createCharacterPortraits } from './character-portraits.js?v=1';
+import { createCharacterPortraits } from './character-portraits.js?v=2';
 import { installArtistThumbnails } from './artist-thumbnails.js?v=20';
 installArtistThumbnails().catch(error=>console.warn('原稿缩略图加载失败',error));
 
@@ -49,6 +50,9 @@ let homeTransition=null;
 let returnView=null;
 let studioTransition=null;
 let portraitMode=null,portraitLayout=[],portraitUndo=[];
+let homeScene='universe',stageLayout=[],stagePortrait=false,sceneChanging=false;
+let stageMotionEnabled=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+const stageActive=()=>isHome?homeScene==='artist-stage':!!portraitMode&&stagePortrait;
 const brushResidents=new Set();
 let brushUndoStart=0;
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -64,10 +68,13 @@ const paperTarget=new THREE.WebGLRenderTarget(1,1,{samples:4});
 const partTarget=new THREE.WebGLRenderTarget(1,1,{minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter});
 partTarget.depthTexture=new THREE.DepthTexture(1,1,THREE.UnsignedIntType);
 const partMaterial=new THREE.ShaderMaterial({
-  uniforms:{locked:{value:0}},
-  vertexShader:'attribute float partId;varying float part;void main(){part=partId;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-  fragmentShader:'uniform float locked;varying float part;void main(){gl_FragColor=vec4(part/255.,locked,0.,1.);}'
+  uniforms:{locked:{value:0},cutout:{value:false},cutoutMap:{value:null}},
+  vertexShader:'attribute float partId;varying float part;varying vec2 panelUv;void main(){part=partId;panelUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader:'uniform float locked;uniform bool cutout;uniform sampler2D cutoutMap;varying float part;varying vec2 panelUv;void main(){if(cutout&&texture2D(cutoutMap,panelUv).a<.5)discard;gl_FragColor=vec4(cutout?200./255.:part/255.,locked,0.,1.);}'
 });
+partMaterial.defaultAttributeValues.uv=[0,0];
+const artistStage=createArtistStage(partMaterial,renderer);scene.add(artistStage.group);
+const stageMotion=createStageMotion();
 const paperScene=new THREE.Scene();
 const paperCamera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
 const paperMaterial=new THREE.ShaderMaterial({
@@ -178,7 +185,7 @@ renderer.domElement.addEventListener('pointermove',e=>{
   if(!isHome||entering||e.buttons){holdResident(null);return;}
   const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,homeCamera);
   const hit=raycaster.intersectObjects([...modelGroups.values()].filter(g=>g.visible).map(g=>g.userData.mesh))[0];
-  holdResident(hit?[...modelGroups].find(([,g])=>g.userData.mesh===hit.object)?.[0]:null);
+  holdResident(hit&&!artistStage.occludes(raycaster,hit.distance)?[...modelGroups].find(([,g])=>g.userData.mesh===hit.object)?.[0]:null);
 });
 renderer.domElement.addEventListener('pointerleave',()=>holdResident(null));
 
@@ -291,7 +298,7 @@ async function loadModel(id) {
   const ink = attachInk(material, data.ink);
   data.ink = ink;
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.onBeforeRender=(_r,_s,_c,_g,m)=>{if(m===partMaterial){partMaterial.uniforms.locked.value=isHome&&!progress.unlocked(id)?1:0;partMaterial.uniformsNeedUpdate=true;}};
+  mesh.onBeforeRender=(_r,_s,_c,_g,m)=>{if(m===partMaterial){partMaterial.uniforms.cutout.value=false;partMaterial.uniforms.locked.value=isHome&&!progress.unlocked(id)?1:0;partMaterial.uniformsNeedUpdate=true;}};
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   mesh.userData.paintable = true;
@@ -375,7 +382,8 @@ function hitAt(x,y) {
   const r=renderer.domElement.getBoundingClientRect();
   pointer.set((x-r.left)/r.width*2-1,-(y-r.top)/r.height*2+1);
   raycaster.setFromCamera(pointer,camera);
-  return (portraitMode?raycaster.intersectObjects([...modelGroups.values()].filter(g=>g.visible).map(g=>g.userData.mesh)):raycaster.intersectObject(current.userData.mesh))[0] || null;
+  const hit=(portraitMode?raycaster.intersectObjects([...modelGroups.values()].filter(g=>g.visible).map(g=>g.userData.mesh)):raycaster.intersectObject(current.userData.mesh))[0];
+  return hit&&!artistStage.occludes(raycaster,hit.distance)?hit:null;
 }
 function brushAt(x,y) {
   const hit=hitAt(x,y);
@@ -432,7 +440,7 @@ renderer.domElement.addEventListener('pointerup', e => {
     if(entering||!downPoint||Math.hypot(e.clientX-downPoint[0],e.clientY-downPoint[1])>6)return;
     const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,homeCamera);
     const hit=raycaster.intersectObjects([...modelGroups.values()].filter(g=>g.visible).map(g=>g.userData.mesh))[0];
-    if(hit){const entry=[...modelGroups].find(([,g])=>g.userData.mesh===hit.object);if(entry)enterResident(entry[0]);}
+    if(hit&&!artistStage.occludes(raycaster,hit.distance)){const entry=[...modelGroups].find(([,g])=>g.userData.mesh===hit.object);if(entry)enterResident(entry[0]);}
     return;
   }
   if(currentTool==='brush'||e.button!==0) return;
@@ -483,7 +491,7 @@ document.querySelector('#spinBtn').addEventListener('click', e => {
   e.currentTarget.setAttribute('aria-pressed', controls.autoRotate);
 });
 document.querySelector('#resetBtn').addEventListener('click', () => {
-  if(portraitMode){framePortrait([...modelGroups.values()].filter(g=>g.visible),camera,controls);return;}
+  if(portraitMode){frameCurrentPortrait();return;}
   camera.position.set(0, .25, 6.7); controls.target.set(0,0,0); controls.update();
   if (current) current.rotation.set(...Object.values(MODELS).find(m => m.name === document.querySelector('#modelName').textContent).rotation);
 });
@@ -500,6 +508,13 @@ document.querySelector('#randomBtn').addEventListener('click', () => {
 function resize() {
   const w = viewport.clientWidth, h = viewport.clientHeight;
   if(!w||!h)return;
+  const oldAspect=isHome?homeCamera.aspect:camera.aspect;
+  if(stageActive()&&!entering&&!homeTransition&&oldAspect!==w/h){
+    const eye=isHome?homeCamera:camera,orbit=isHome?homeControls:controls;
+    const previous=stageView(oldAspect,eye.fov),next=stageView(w/h,eye.fov);
+    eye.position.sub(orbit.target).multiplyScalar(next.position.z/previous.position.z).add(orbit.target);
+    homeZoomDistance=null;
+  }
   renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
   const resolution=renderer.getDrawingBufferSize(new THREE.Vector2());
   paperTarget.setSize(resolution.x,resolution.y);
@@ -514,7 +529,8 @@ new ResizeObserver(()=>{if(!isHome)resize();}).observe(document.querySelector('#
 function animate() {
   requestAnimationFrame(animate);
   const now=performance.now();frameDelta=Math.min(.05,Math.max(0,(now-lastFrameTime)/1000));lastFrameTime=now;
-  starAtmosphere.update(performance.now(),isHome&&homeMotion&&!entering&&!matchMedia('(prefers-reduced-motion: reduce)').matches,homeCamera);
+  artistStage.group.visible=stageActive();
+  starAtmosphere.update(performance.now(),isHome&&!stageActive()&&homeMotion&&!entering&&!matchMedia('(prefers-reduced-motion: reduce)').matches,homeCamera);
   if(isHome)animateUniverse(performance.now());
   else if(studioTransition){
     const tr=studioTransition,p=Math.min(1,(now-tr.start)/tr.duration),ease=p*p*(3-2*p);
@@ -527,9 +543,12 @@ function animate() {
     if(p===1){camera.clearViewOffset();studioTransition=null;tr.done();}
   }
   else if(!painting&&!entering) controls.update();
+  if(!isHome&&stagePortrait&&portraitMode==='preview'&&!entering){
+    stageMotion.update(frameDelta,{enabled:stageMotionEnabled,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches});
+  }
   for(const g of modelGroups.values())if(g.visible)g.userData.ink.time.value=performance.now()/1000;
   const activeCamera=isHome?homeCamera:camera;
-  paperMaterial.uniforms.environmentFade.value=isHome?.38:0;
+  paperMaterial.uniforms.environmentFade.value=isHome&&!stageActive()?.38:0;
   const visible=[...modelGroups.values()].filter(g=>g.visible);
   if(visible.length){
     cosmic.visible=false;
@@ -546,12 +565,16 @@ function animate() {
   // Render faint sky first, then the opaque white residents and their ink.
   // This guarantees orbit/meteor strokes cannot cross a character's surface.
   renderer.autoClear=false;renderer.clear();
-  if(isHome)renderer.render(starAtmosphere.scene,homeCamera);
+  if(isHome&&!stageActive())renderer.render(starAtmosphere.scene,homeCamera);
   renderer.clearDepth();renderer.render(paperScene,paperCamera);
   renderer.autoClear=true;
   if(postcardCapture){const pending=postcardCapture;postcardCapture=null;try{pending.resolve(captureAvatarSource());}catch(e){pending.reject(e);}}
 }
 function layoutResidents(){
+  if(homeScene==='artist-stage'){
+    if(!stageLayout.length)stageLayout=arrangeStage([...modelGroups].filter(([id])=>progress.unlocked(id)),MODELS);
+    applyStageLayout();return;
+  }
   const frame=viewport.getBoundingClientRect();
   const halfY=Math.tan(THREE.MathUtils.degToRad(22))*18,halfX=halfY*frame.width/frame.height;
   const positions=[[-.60,.49,5.5],[.48,.49,-6.5],[-.13,.10,0],[.69,-.03,2],[-.64,-.29,-8],[.30,-.30,6.5],[.68,-.55,-4.5],[-.08,-.56,-1],[.38,-.73,4],[-.10,.58,-2.5],[-.70,.02,-3],[-.40,-.70,2],[.34,.10,-4],[-.38,.28,-7],[.72,.35,-2],[-.83,.67,-5],[.05,.80,-6],[-.84,-.65,-5]];
@@ -572,6 +595,91 @@ function layoutResidents(){
     g.userData.crease.material.uniforms.width.value=.72;
   }
 }
+function applyStageLayout(){
+  const poses=new Map(stageLayout.map(item=>[item.id,item]));
+  for(const [id,g]of modelGroups){
+    const pose=poses.get(id);g.visible=!!pose;
+    if(!pose)continue;
+    g.position.fromArray(pose.position);g.quaternion.fromArray(pose.quaternion);g.scale.setScalar(pose.scale);
+    g.userData.crease.material.uniforms.resolution.value.set(viewport.clientWidth,viewport.clientHeight);
+    g.userData.crease.material.uniforms.width.value=1;
+    g.updateMatrixWorld(true);
+  }
+  stageMotion.setLayout(stageLayout,modelGroups);
+  stageMotion.update(0,{enabled:false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches});
+}
+function updateStageLabels(){
+  const frame=viewport.getBoundingClientRect();
+  for(const [id,g]of modelGroups){
+    const label=document.querySelector(`[data-resident="${id}"]`);if(!label)continue;
+    if(!g.visible){label.style.display='none';continue;}
+    const p=g.position.clone().project(homeCamera);
+    label.style.display=p.z>=-1&&p.z<=1&&Math.abs(p.x)<.97&&Math.abs(p.y)<.9?'':'none';
+    label.style.left=`${(p.x*.5+.5)*frame.width}px`;label.style.top=`${(-p.y*.5+.5)*frame.height+20}px`;
+  }
+}
+function configureHomeCamera(){
+  const stage=homeScene==='artist-stage';
+  homeCamera.fov=stage?42:58;homeCamera.far=stage?300:150;homeCamera.updateProjectionMatrix();
+  homeControls.minDistance=stage?16:7;homeControls.maxDistance=stage?180:32;
+  homeControls.minPolarAngle=stage?.6:0;homeControls.maxPolarAngle=stage?2.5:Math.PI;
+  homeControls.minAzimuthAngle=stage?-1.15:-Infinity;homeControls.maxAzimuthAngle=stage?1.15:Infinity;
+  homeControls.autoRotate=false;
+}
+function updateSceneUI(){
+  const stage=homeScene==='artist-stage';
+  document.body.classList.toggle('artist-stage',stage);
+  for(const button of document.querySelectorAll('[data-scene]'))button.setAttribute('aria-pressed',String(button.dataset.scene===homeScene));
+  for(const id of ['stageNote','stageFrame','stageShuffle','stageReposition'])document.getElementById(id).hidden=!stage;
+  updateStageMotionUI();
+}
+function updateStageMotionUI(){
+  const stage=homeScene==='artist-stage',homeButton=document.querySelector('#homeMotion');
+  homeButton.setAttribute('aria-pressed',String(stage?stageMotionEnabled:homeMotion));
+  homeButton.textContent=stage?(stageMotionEnabled?'暂停动态 Ⅱ':'继续动态 ▷'):(homeMotion?'暂停漂浮 Ⅱ':'继续漂浮 ▷');
+  const preview=stagePortrait&&portraitMode==='preview';
+  document.querySelector('#portraitReposition').hidden=!preview;
+  const motion=document.querySelector('#portraitStageMotion');motion.hidden=!preview;
+  motion.setAttribute('aria-pressed',String(stageMotionEnabled));motion.textContent=stageMotionEnabled?'暂停动态 Ⅱ':'继续动态 ▷';
+  document.querySelector('#portraitShuffle').textContent=stagePortrait?'换一组朋友 ↻':'换一组 ↻';
+}
+async function switchHomeScene(next){
+  if(!isHome||entering||sceneChanging||next===homeScene)return;
+  sceneChanging=true;
+  const buttons=[...document.querySelectorAll('[data-scene]')],note=document.querySelector('#stageNote');
+  buttons.forEach(button=>button.disabled=true);
+  try{
+    if(next==='artist-stage'){
+      note.hidden=false;note.textContent='正在展开艺术家的布景…';await artistStage.load();
+      stageLayout=arrangeStage([...modelGroups].filter(([id])=>progress.unlocked(id)),MODELS);
+    }
+    homeScene=next;holdResident(null);homeZoomDistance=null;returnView=null;
+    configureHomeCamera();layoutResidents();artistStage.group.visible=next==='artist-stage';
+    const view=next==='artist-stage'?stageView(homeCamera.aspect,homeCamera.fov):{position:new THREE.Vector3(0,1.2,11.8),target:new THREE.Vector3()};
+    homeCamera.position.copy(view.position);homeControls.target.copy(view.target);homeControls.update();
+    note.textContent='四张原画，一座小剧场 · 拖动发现前后层次';updateSceneUI();
+    try{localStorage.setItem('doodle-home-scene',homeScene);}catch{}
+  }catch(error){note.hidden=false;note.textContent='布景加载失败，请重试';console.error('Artist stage failed to load',error);}
+  finally{sceneChanging=false;buttons.forEach(button=>button.disabled=false);}
+}
+document.querySelectorAll('[data-scene]').forEach(button=>button.onclick=()=>switchHomeScene(button.dataset.scene));
+document.querySelector('#stageShuffle').onclick=()=>{
+  if(entering||sceneChanging||homeScene!=='artist-stage')return;
+  stageLayout=arrangeStage([...modelGroups].filter(([id])=>progress.unlocked(id)),MODELS,true);applyStageLayout();holdResident(null);
+};
+document.querySelector('#stageReposition').onclick=()=>{
+  if(entering||sceneChanging||homeScene!=='artist-stage')return;
+  stageLayout=randomizeStagePositions(stageLayout,[...modelGroups],MODELS);applyStageLayout();holdResident(null);
+};
+document.querySelector('#stageFrame').onclick=async()=>{
+  if(entering||sceneChanging)return;
+  const view=stageView(homeCamera.aspect,homeCamera.fov);homeZoomDistance=null;holdResident(null);
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    entering=true;homeControls.enabled=false;
+    await new Promise(done=>homeTransition={start:performance.now(),duration:850,from:homeCamera.position.clone(),to:view.position,targetFrom:homeControls.target.clone(),target:view.target,done});
+  }
+  homeCamera.position.copy(view.position);homeControls.target.copy(view.target);homeControls.update();homeControls.enabled=true;entering=false;
+};
 function faceResident(id,g,t,index){
   // World-Y rotation preserves the authored orientation; no camera-facing lock.
   const moving=homeMotion&&hoveredResident!==id&&!entering&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -609,7 +717,7 @@ function animateUniverse(t){
       homeCamera.position.copy(lookTarget).add(offset);
     }
     homeCamera.lookAt(lookTarget);
-    let index=0;for(const [id,g]of modelGroups)faceResident(id,g,t,index++);
+    if(homeScene!=='artist-stage'){let index=0;for(const [id,g]of modelGroups)faceResident(id,g,t,index++);}
     if(tr.rotationFrom)modelGroups.get(tr.id).quaternion.slerpQuaternions(tr.rotationFrom,tr.rotationTo,ease);
     if(p===1){homeTransition=null;tr.done();}
     return;
@@ -621,6 +729,11 @@ function animateUniverse(t){
     const next=THREE.MathUtils.lerp(distance,homeZoomDistance,1-Math.exp(-frameDelta/.18));
     homeCamera.position.copy(homeControls.target).add(zoomOffset.setLength(next));
     if(Math.abs(next-homeZoomDistance)<.002)homeZoomDistance=null;
+  }
+  if(homeScene==='artist-stage'){
+    homeControls.autoRotate=false;homeControls.update(frameDelta);
+    if(!entering)stageMotion.update(frameDelta,{enabled:stageMotionEnabled,held:hoveredResident,reduced});
+    updateStageLabels();return;
   }
   const orbiting=homeMotion&&!reduced&&!homeInteracting&&!hoveredResident&&t>homeOrbitResume;
   homeControls.autoRotate=orbiting;
@@ -653,7 +766,7 @@ function animateUniverse(t){
 }
 async function enterResident(id,zoom=true,push=true){
   if(!progress.unlocked(id)){progress.blocked(id);return;}
-  if(entering||!modelGroups.has(id))return;
+  if(entering||sceneChanging||!modelGroups.has(id))return;
   leavePortrait();
   entering=true;controls.enabled=false;homeControls.enabled=false;
   if(isHome)returnView={position:homeCamera.position.clone(),target:homeControls.target.clone()};
@@ -676,7 +789,7 @@ async function enterResident(id,zoom=true,push=true){
     rotationFrom:homeCamera.quaternion.clone(),fov:homeCamera.fov,
     fullWidth:oldFrame.width,fullHeight:oldFrame.height,left:oldFrame.left,top:oldFrame.top
   }:null;
-  isHome=false;document.body.classList.remove('home-mode','entering');
+  isHome=false;artistStage.group.visible=false;document.body.classList.remove('home-mode','entering');
   document.querySelector('#universe').hidden=true;
   const studio=document.querySelector('.workspace');studio.hidden=false;studio.classList.remove('studio-arrival');
   document.querySelector('#homeBtn').hidden=false;
@@ -706,20 +819,21 @@ async function showUniverse(push=true){
   const wasPortrait=!!portraitMode;leavePortrait();
   const id=current?.userData.id,g=modelGroups.get(id),rotationFrom=g?.quaternion.clone();
   const editorOffset=camera.position.clone().sub(controls.target);
-  const animate=!!g&&!wasPortrait&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const animate=!!g&&!wasPortrait&&(homeScene!=='artist-stage'||stageLayout.some(item=>item.id===id))&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
   entering=true;
   isHome=true;controls.enabled=false;homeControls.enabled=true;controls.autoRotate=false;document.querySelector('#spinBtn').setAttribute('aria-pressed','false');
   document.body.classList.add('home-mode');document.querySelector('.workspace').hidden=true;
   document.querySelector('#universe').hidden=false;document.querySelector('#homeBtn').hidden=true;
   viewport=document.querySelector('#homeViewport');viewport.appendChild(renderer.domElement);
-  homeZoomDistance=null;homeCamera.position.set(0,1.2,11.8);homeCamera.zoom=1;homeControls.target.set(0,0,0);homeControls.update();
+  homeZoomDistance=null;configureHomeCamera();homeCamera.position.set(0,1.2,11.8);homeCamera.zoom=1;homeControls.target.set(0,0,0);homeControls.update();
   for(const g of modelGroups.values())g.visible=false;
   resize();document.querySelector('#universeStatus').textContent='点击一个朋友，飞近一点 ↗';
   if(push)history.pushState({},'','#universe');window.scrollTo(0,0);
-  const destination=returnView??{position:new THREE.Vector3(0,1.2,11.8),target:new THREE.Vector3()};
+  const destination=returnView??(homeScene==='artist-stage'?stageView(homeCamera.aspect,homeCamera.fov):{position:new THREE.Vector3(0,1.2,11.8),target:new THREE.Vector3()});
   if(animate){
     document.body.classList.add('entering');homeControls.enabled=false;
     let index=0;for(const [key,resident] of modelGroups){
+      if(homeScene==='artist-stage')continue;
       if(!floatingResidents.bodies.has(key))continue;
       resident.position.copy(floatingResidents.position(key,homeSpaceScale));
       resident.scale.setScalar(resident.userData.homeScale);faceResident(key,resident,performance.now(),index++);resident.visible=true;
@@ -739,54 +853,97 @@ function selectPortraitResident(g){
 }
 function leavePortrait(){
   if(!portraitMode)return;
-  portraitMode=null;document.body.classList.remove('portrait-mode','portrait-preview');
+  portraitMode=null;stagePortrait=false;artistStage.group.visible=false;document.body.classList.remove('portrait-mode','portrait-preview','stage-portrait');
   document.querySelector('#portraitToolbar').hidden=true;
   document.querySelector('#saveDesign').textContent='保存设计版本';
-  controls.maxDistance=8;portraitUndo=[];
+  controls.maxDistance=8;camera.far=100;camera.updateProjectionMatrix();controls.minPolarAngle=0;controls.maxPolarAngle=Math.PI;controls.minAzimuthAngle=-Infinity;controls.maxAzimuthAngle=Infinity;portraitUndo=[];
+  updateStageMotionUI();
+}
+function frameCurrentPortrait(){
+  if(stagePortrait){const view=stageView(camera.aspect,camera.fov);camera.position.copy(view.position);controls.target.copy(view.target);camera.lookAt(view.target);controls.update();}
+  else framePortrait([...modelGroups.values()].filter(g=>g.visible),camera,controls);
 }
 function shufflePortrait(){
   if(!portraitMode||painting)return;
-  portraitLayout=arrangePortrait([...modelGroups].filter(([id])=>progress.unlocked(id)),MODELS);
+  portraitLayout=stagePortrait?arrangeStage([...modelGroups].filter(([id])=>progress.unlocked(id)),MODELS,true):arrangePortrait([...modelGroups].filter(([id])=>progress.unlocked(id)),MODELS);
   for(const [id,g]of modelGroups)g.visible=portraitLayout.some(item=>item.id===id);
-  framePortrait([...modelGroups.values()].filter(g=>g.visible),camera,controls);
+  if(stagePortrait)stageMotion.setLayout(portraitLayout,modelGroups);
+  frameCurrentPortrait();
   document.querySelector('#portraitHint').textContent=`${portraitLayout.length} 位朋友，前后交叠 · 拖动查看，或换一组构图`;
 }
-async function openPortrait(push=true){
-  if(entering||painting)return;
+async function openPortrait(push=true,withStage=homeScene==='artist-stage'){
+  if(entering||painting||sceneChanging)return;
   if(!modelGroups.size)return;
+  if(withStage){try{await artistStage.load();}catch{document.querySelector('#universeStatus').textContent='布景加载失败，请重试';return;}}
+  const wasStageHome=isHome&&homeScene==='artist-stage'&&withStage;
+  stagePortrait=withStage;
   if(isHome)returnView={position:homeCamera.position.clone(),target:homeControls.target.clone()};
   isHome=false;portraitMode='preview';portraitUndo=[];holdResident(null);
   document.body.classList.remove('home-mode');document.body.classList.add('portrait-mode','portrait-preview');
+  document.body.classList.toggle('stage-portrait',stagePortrait);artistStage.group.visible=stagePortrait;
   document.querySelector('#universe').hidden=true;document.querySelector('.workspace').hidden=false;
   document.querySelector('.workspace').classList.remove('studio-arrival');
   document.querySelector('#homeBtn').hidden=false;document.querySelector('#portraitToolbar').hidden=false;
   document.querySelector('#portraitConfirm').hidden=false;document.querySelector('#portraitExport').hidden=true;
-  homeControls.enabled=false;controls.enabled=true;controls.autoRotate=false;controls.maxDistance=65;
+  homeControls.enabled=false;controls.enabled=true;controls.autoRotate=false;controls.maxDistance=stagePortrait?180:65;
+  controls.minPolarAngle=stagePortrait?.6:0;controls.maxPolarAngle=stagePortrait?2.5:Math.PI;
+  controls.minAzimuthAngle=stagePortrait?-1.15:-Infinity;controls.maxAzimuthAngle=stagePortrait?1.15:Infinity;
   document.querySelector('#spinBtn').setAttribute('aria-pressed','false');
   viewport=document.querySelector('#viewport');viewport.appendChild(renderer.domElement);
-  camera.clearViewOffset();camera.fov=34;resize();
-  shufflePortrait();selectPortraitResident(modelGroups.get(portraitLayout[0].id));
+  camera.clearViewOffset();camera.fov=34;camera.far=stagePortrait?300:100;resize();
+  if(wasStageHome){
+    portraitLayout=stageLayout.map(item=>({...item}));applyStageLayout();
+    const factor=stageView(camera.aspect,camera.fov).position.z/stageView(homeCamera.aspect,homeCamera.fov).position.z;
+    controls.target.copy(homeControls.target);camera.position.copy(homeCamera.position).sub(homeControls.target).multiplyScalar(factor).add(controls.target);camera.lookAt(controls.target);controls.update();
+    document.querySelector('#portraitHint').textContent='原画布景 × 3D 朋友 · 拖动寻找你的合影角度';
+  }
+  else shufflePortrait();
+  if(stagePortrait)stageMotion.setLayout(portraitLayout,modelGroups);
+  updateStageMotionUI();
+  selectPortraitResident(modelGroups.get(portraitLayout[0].id));
   document.querySelector('#modelName').textContent='宇宙合照';
   for(const g of modelGroups.values()){g.userData.crease.material.uniforms.resolution.value.set(viewport.clientWidth,viewport.clientHeight);g.userData.crease.material.uniforms.width.value=.6+(+document.querySelector('#lineWidth').value)*.25;}
   if(push)history.pushState({},'','#portrait');
 }
 document.querySelector('#portraitBtn').onclick=()=>openPortrait();
 document.querySelector('#portraitShuffle').onclick=shufflePortrait;
+document.querySelector('#portraitReposition').onclick=()=>{
+  if(!stagePortrait||portraitMode!=='preview'||painting||entering)return;
+  portraitLayout=randomizeStagePositions(portraitLayout,[...modelGroups],MODELS);
+  stageMotion.setLayout(portraitLayout,modelGroups);
+  document.querySelector('#portraitHint').textContent='同一组朋友，换个站位 · 确认后定格，开始涂鸦';
+};
+document.querySelector('#portraitStageMotion').onclick=()=>{stageMotionEnabled=!stageMotionEnabled;updateStageMotionUI();};
 document.querySelector('#portraitConfirm').onclick=()=>{
+  if(stagePortrait)portraitLayout=snapshotStageLayout(portraitLayout,modelGroups);
   portraitMode='paint';document.body.classList.remove('portrait-preview');
+  updateStageMotionUI();
   document.querySelector('#portraitConfirm').hidden=true;document.querySelector('#portraitExport').hidden=false;
   document.querySelector('#portraitHint').textContent='直接在整组角色上填色、泼洒或涂鸦 · 空白处拖动旋转';
   document.querySelector('#saveDesign').textContent='保存整组设计';
-  resize();framePortrait([...modelGroups.values()].filter(g=>g.visible),camera,controls);progress.update();
+  resize();if(!stagePortrait)frameCurrentPortrait();progress.update();
 };
 async function restorePortrait(layout){
-  await openPortrait();portraitLayout=layout;
+  await openPortrait(true,layout.some(item=>item.scene==='artist-stage'));portraitLayout=layout;
   for(const [id,g]of modelGroups){const item=layout.find(p=>p.id===id);g.visible=!!item;if(item){g.position.fromArray(item.position);g.scale.setScalar(item.scale);g.quaternion.fromArray(item.quaternion);}}
+  frameCurrentPortrait();
   document.querySelector('#portraitConfirm').onclick();
 }
 document.querySelector('#portraitExport').onclick=async()=>{
   const b=document.querySelector('#portraitExport');b.disabled=true;
-  try{const image=await capturePostcard();const a=document.createElement('a');a.href=image;a.download='Doodle-Planet-宇宙合照.png';a.click();}finally{b.disabled=false;}
+  const hint=document.querySelector('#portraitHint');
+  try{
+    let image=await capturePostcard();
+    if(stagePortrait){
+      // A theater photo is a white-paper composition, including the open sky.
+      const picture=new Image();picture.src=image;await picture.decode();
+      const photo=document.createElement('canvas');photo.width=picture.naturalWidth;photo.height=picture.naturalHeight;
+      const ctx=photo.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,photo.width,photo.height);ctx.drawImage(picture,0,0);image=photo.toDataURL('image/png');
+    }
+    const a=document.createElement('a');a.id='portraitDownload';a.href=image;a.download='Doodle-Planet-宇宙合照.png';a.textContent='再次下载';
+    hint.replaceChildren(document.createTextNode('合照已生成 · '),a);a.click();
+  }catch(error){hint.textContent='合照生成失败，请重试';console.error('Portrait export failed',error);}
+  finally{b.disabled=false;}
 };
 async function initUniverse(){
   controls.enabled=false;
@@ -811,6 +968,8 @@ async function initUniverse(){
   for(const id of modelGroups.keys())document.querySelector(`[data-resident="${id}"]`).disabled=false;
   progress.update();
   document.querySelector('#portraitBtn').disabled=false;
+  document.querySelector('[data-scene="artist-stage"]').disabled=false;
+  try{if(localStorage.getItem('doodle-home-scene')==='artist-stage')await switchHomeScene('artist-stage');}catch{}
   const id=location.hash.replace('#paint=','');if(MODELS[id])await enterResident(id,false,false);
   else if(location.hash==='#portrait')await openPortrait(false);
   if(isHome)window.scrollTo(0,0);
@@ -822,7 +981,7 @@ document.querySelector('#convergenceBtn').addEventListener('click',()=>{
   document.querySelector('#homeMotion').setAttribute('aria-pressed','false');document.querySelector('#homeMotion').textContent='继续漂浮 ▷';
 });
 document.querySelector('.brand').addEventListener('click',e=>{e.preventDefault();showUniverse();});
-document.querySelector('#homeMotion').addEventListener('click',e=>{homeMotion=!homeMotion;e.currentTarget.setAttribute('aria-pressed',homeMotion);e.currentTarget.textContent=homeMotion?'暂停漂浮 Ⅱ':'继续漂浮 ▷';});
+document.querySelector('#homeMotion').addEventListener('click',()=>{if(homeScene==='artist-stage')stageMotionEnabled=!stageMotionEnabled;else homeMotion=!homeMotion;updateStageMotionUI();});
 addEventListener('popstate',()=>{const id=location.hash.replace('#paint=','');if(MODELS[id])enterResident(id,false,false);else if(location.hash==='#portrait')openPortrait(false);else showUniverse(false);});
 const progress=await createProgress({models:MODELS,groups:modelGroups,current:()=>isHome?null:current,enter:enterResident,enterGroup:restorePortrait,refresh:()=>{},onComplete:id=>journey.complete(id)});
 const portrait=createCharacterPortraits({groups:modelGroups,models:MODELS,paperMaterial,partMaterial});
